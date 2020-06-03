@@ -1,6 +1,6 @@
 # Rest Api server
 
 para intarlar librería
-`npm install`
+```npm install```
 
-_Curso de Node_
+*Curso de Node*
