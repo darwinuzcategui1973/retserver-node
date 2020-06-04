@@ -1,54 +1,37 @@
-require('../config/config');
+require('./config/config');
 
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+
 const bodyParser = require('body-parser');
 
+
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-// petición GET
-app.get('/usuario', function(req, res) {
-    res.json('get Usuario')
-});
-// petición POST
-app.post('/usuario', (req, res) => {
+app.use(require("./routes/usuario"));
 
-    let body = req.body;
 
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: "El nombre es Necesario"
-        });
+// conexion  a la base de datos
+//mongodb+srv://darwin:Gmd123456@cluster0-wcnbe.mongodb.net/productosgmd1
+// mongodb://localhost:27017/gmdproducto
 
-    } else {
-
-        res.json({
-            persona: body
-        });
-
-    }
+mongoose.connect(process.env.URLDB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+}, (err, res) => {
+    if (err) throw err;
+    console.log("Base de datos ONLINE");
 
 
 });
 
-// petición PUT
-app.put('/usuario/:id', (req, res) => {
-    let id = req.params.id;
-    res.json({
-        id
-    })
-});
-// petición delete
-app.delete('/usuario', (req, res) => {
-    res.json('delete Usuario')
-});
-
-app.listen(puerto, () => {
-    console.log("Escuchando el Puerto: ", puerto);
+app.listen(process.env.PORT, () => {
+    console.log("Escuchando el Puerto: ", process.env.PORT);
 
 });
