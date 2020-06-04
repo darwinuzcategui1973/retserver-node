@@ -17,7 +17,7 @@ let urlDB;
 if (process.env.NODE_ENV === "dev") {
     urlDB = "mongodb://localhost:27017/gmdproducto";
 } else {
-    urlDB = "mongodb+srv://darwin:Gmd123456@cluster0-wcnbe.mongodb.net/gmdproducto";
+    urlDB =process.env.MONGO_URI;
 }
 
 process.env.URLDB = urlDB;
