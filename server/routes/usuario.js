@@ -9,7 +9,8 @@ const _ = require("underscore");
 const Usuario = require("../models/usuario");
 
 const {
-    verificaToken
+    verificaToken,
+    verificaAdmin_Role
 } = require("../middlewares/autenticacion")
 
 
@@ -19,13 +20,15 @@ const app = express();
 //rutas
 
 // petición GET
-app.get('/usuario', verificaToken, function(req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
 
+    /*
     return res.json({
         usuario: req.usuario,
         nombre: req.usuario.nombre,
-        email: req.email
+        email: req.usuario.email
     })
+    */
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -62,7 +65,7 @@ app.get('/usuario', verificaToken, function(req, res) {
 
 });
 // petición POST
-app.post('/usuario', (req, res) => {
+app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
 
     let body = req.body;
 
@@ -91,25 +94,11 @@ app.post('/usuario', (req, res) => {
 
     });
 
-    /*
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: "El nombre es Necesario"
-        });
 
-    } else {
-
-        res.json({
-            persona: body
-        });
-
-    }
-    */
 });
 
 // petición PUT
-app.put('/usuario/:id', (req, res) => {
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
     const arreglo = ["nombre", "img", "role", "email", "estado"];
     let body = _.pick(req.body, arreglo);
@@ -139,7 +128,7 @@ app.put('/usuario/:id', (req, res) => {
 
 });
 // petición delete
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
     Usuario.findByIdAndRemove(id, (error, usuarioBorrado) => {
 
@@ -173,7 +162,7 @@ app.delete('/usuario/:id', (req, res) => {
 });
 
 // petición delete solo marcar el estado
-app.delete('/usuario/marcar/:id', (req, res) => {
+app.delete('/usuario/marcar/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
     const arreglo = ["estado"];
     let body = _.pick(req.body, arreglo);
@@ -212,7 +201,7 @@ app.delete('/usuario/marcar/:id', (req, res) => {
 });
 
 // petición delete solo marcar como el curso
-app.delete('/usuario/marcar1/:id', (req, res) => {
+app.delete('/usuario/marcar1/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
     let cambioEstado = {
         "estado": false
