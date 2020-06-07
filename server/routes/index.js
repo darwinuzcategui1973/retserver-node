@@ -9,7 +9,7 @@ app.use(require("./grupo"));
 app.use(require("./marca"));
 app.use(require("./productoGMD"));
 app.use(require("./uploads"));
-
+app.use(require("./imagenes"));
 
 
 module.exports = app;
