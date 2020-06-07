@@ -34,6 +34,12 @@ let productoSchema = new Schema({
         ref: 'Grupo',
         required: true
     },
+    marca: {
+        type: Schema.Types.ObjectId,
+        ref: 'Marca',
+        required: true
+    },
+
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario'
