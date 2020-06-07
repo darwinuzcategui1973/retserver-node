@@ -17,7 +17,7 @@ app.get('/imagen/:tipo/:img', (req, res) => {
 
     let pathimg = `./uploads/${tipo}/${img}`;
 
-    let noImagePath = path.resolve(__dirname, '../../server/assets/no-img.png');
+    let noImagePath = path.resolve(__dirname, '../assets/no-img.png');
 
     res.sendFile(noImagePath);
 
