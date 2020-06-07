@@ -1,5 +1,7 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
+const uniqueValidator = require("mongoose-unique-validator");
+
 
 
 let productoSchema = new Schema({
@@ -38,6 +40,7 @@ let productoSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Marca',
         required: true
+
     },
 
     usuario: {

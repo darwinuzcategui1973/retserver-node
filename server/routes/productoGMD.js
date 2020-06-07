@@ -11,10 +11,45 @@ let Producto = require('../models/productoGMD');
 // ==================================
 //  Obtener o lista los Productos
 // ==================================
-app.get('/productos', (req, res) = {
-    // lista los productos
-    // populate: Usuario grupo marca
-    // paginado
+app.get('/productos', verificaToken, (req, res) => {
+
+
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+    let limite = req.query.limite || 5;
+    limite = Number(limite);
+
+
+    Producto.find({ disponible: true })
+        .skip(desde)
+        .limit(limite)
+        .sort("nombre")
+        .populate("usuario", "nombre email")
+        .populate("grupo", "nombre")
+        .populate("marca", "nombre")
+        .exec((error, productos) => {
+            if (error) {
+
+                return res.status(400).json({
+                    ok: false,
+                    error
+                });
+
+            }
+
+
+            Producto.countDocuments({ disponible: true }, (error, conteo) => {
+                res.json({
+                    ok: true,
+                    productos,
+                    cuantosReg: conteo
+
+
+
+                });
+            });
+
+        })
 
 });
 
@@ -22,9 +57,90 @@ app.get('/productos', (req, res) = {
 // ==================================
 //  Obtener un Producto por id
 // ==================================
-app.get('/productos/:id', verificaToken, (req, res) = {
-    // Un producto
-    // populate: Usuario grupo marca
+app.get("/productos/:id", verificaToken, (req, res) => {
+    // muestra un grupo por su Id
+    let id = req.params.id;
+    console.log(id);
+
+    // Producto.findById(id);
+    Producto.findById(id)
+        .populate("usuario", "nombre email")
+        .populate("grupo", "nombre")
+        .populate("marca", "nombre")
+        .exec((error, productoBD) => {
+
+
+            if (error) {
+
+                return res.status(400).json({
+                    ok: false,
+                    error
+                });
+
+            };
+
+
+            if (!productoBD) {
+                return res.status(400).json({
+                    ok: false,
+                    error: {
+                        message: "Producto no Encontrado!."
+                    }
+                });
+            }
+
+            res.json({
+                ok: true,
+                producto: productoBD
+            });
+
+
+        });
+
+
+
+
+});
+
+// ==================================
+//  Busca Productos
+// ==================================
+app.get('/productos/buscar/:termino', verificaToken, (req, res) => {
+
+    let termino = req.params.termino;
+    let expresionRegular = new RegExp(termino, 'i')
+
+
+    Producto.find({ nombre: expresionRegular, disponible: true })
+        .populate('grupo', 'nombre')
+        .exec((error, productos) => {
+
+            if (error) {
+
+                return res.status(400).json({
+                    ok: false,
+                    error
+                });
+
+            };
+
+
+            if (!productos) {
+                return res.status(400).json({
+                    ok: false,
+                    error: {
+                        message: "Producto no Encontrado!."
+                    }
+                });
+            }
+
+            res.json({
+                ok: true,
+                producto: productos
+            });
+
+
+        });
 
 
 });
@@ -48,9 +164,8 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
         nombre: body.nombre,
         precioUni: body.precioUni,
         descripcion: body.descripcion,
-        img: body.img,
-        // grupo,
-        // marca,
+        grupo: body.grupo,
+        marca: body.marca,
         usuario
     });
 
@@ -94,7 +209,7 @@ app.put('/productos/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 
     //delete body.google
 
-    Producto.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (error, productoBD) => {
+    Producto.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (error, productoDB) => {
 
         if (error) {
 
@@ -116,7 +231,7 @@ app.put('/productos/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 
         res.json({
             ok: true,
-            producto: productoBD
+            producto: productoDB
         });
 
 
@@ -127,15 +242,45 @@ app.put('/productos/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 // ==================================
 //  Borrar un Producto
 // ==================================
-app.delete('/productos/:id', (req, res) = {
-    // diponible pasa a falso
+app.delete('/productos/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
+    let id = req.params.id;
+    let cambioEstado = {
+        "disponible": false
+    };
 
 
+    Producto.findByIdAndUpdate(id, cambioEstado, { new: true }, (error, productoBD) => {
+
+
+        if (error) {
+
+            return res.status(400).json({
+                ok: false,
+                error
+            });
+
+        };
+
+        // voy a seguir en video 15 seccion 9
+
+        if (!productoBD) {
+            return res.status(400).json({
+                ok: false,
+                error: {
+                    message: "Producto no Encontrado!."
+                }
+            });
+        }
+
+        res.json({
+            ok: true,
+            mensaje: "Producto no Disponible",
+            producto: productoBD
+        });
+
+
+    });
 });
-
-
-
-
 
 
 module.exports = app;
