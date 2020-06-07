@@ -22,13 +22,6 @@ const app = express();
 // petición GET
 app.get('/usuario', verificaToken, (req, res) => {
 
-    /*
-    return res.json({
-        usuario: req.usuario,
-        nombre: req.usuario.nombre,
-        email: req.usuario.email
-    })
-    */
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -127,6 +120,7 @@ app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     });
 
 });
+
 // petición delete
 app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;

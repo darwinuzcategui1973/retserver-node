@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.resolve(__dirname, "../public")));
 
-console.log(path.resolve(__dirname, "../public"));
+// console.log(path.resolve(__dirname, "../public"));
 
 
 
