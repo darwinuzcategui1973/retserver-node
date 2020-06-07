@@ -8,6 +8,7 @@ app.use(require("./login"));
 app.use(require("./grupo"));
 app.use(require("./marca"));
 app.use(require("./productoGMD"));
+app.use(require("./uploads"));
 
 
 
