@@ -57,6 +57,46 @@ app.get('/usuario', verificaToken, (req, res) => {
         })
 
 });
+// usuario sin token
+// petición GET
+app.get('/usuario_sin_token', (req, res) => {
+
+
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+    let limite = req.query.limite || 5;
+    limite = Number(limite);
+
+
+    Usuario.find({ estado: true }, "nombre email role estado google img")
+        .skip(desde)
+        .limit(limite)
+        .exec((error, usuarios) => {
+            if (error) {
+
+                return res.status(400).json({
+                    ok: false,
+                    error
+                });
+
+            }
+            // Usuario.count({ estado: true }, (error, conteo) => {
+
+            Usuario.countDocuments({ estado: true }, (error, conteo) => {
+                res.json({
+                    ok: true,
+                    usuarios,
+                    cuantosReg: conteo
+
+
+
+                });
+            });
+
+        })
+
+});
+
 // petición POST
 app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
 
