@@ -17,6 +17,11 @@ let grupoSchema = new Schema({
         type: String,
 
     },
+    fotourl: {
+        type: String,
+        required: false
+
+    },
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario'

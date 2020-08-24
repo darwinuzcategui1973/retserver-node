@@ -13,6 +13,11 @@ let marcaSchema = new Schema({
         type: String,
         required: [true, "El nombre Marca es Necesario"]
     },
+    fotourl: {
+        type: String,
+        required: false
+
+    },
 
     usuario: {
         type: Schema.Types.ObjectId,

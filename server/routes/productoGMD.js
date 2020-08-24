@@ -162,7 +162,9 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
     let producto = new Producto({
         codGMD: body.codGMD,
         nombre: body.nombre,
+        unidadm: body.unidadm,
         precioUni: body.precioUni,
+        precioUniDolar: body.precioUniDolar,
         descripcion: body.descripcion,
         grupo: body.grupo,
         marca: body.marca,

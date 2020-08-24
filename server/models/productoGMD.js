@@ -18,13 +18,26 @@ let productoSchema = new Schema({
         type: Number,
         required: [true, 'El precio únitario es necesario']
     },
+    precioUniDolar: {
+        type: Number,
+        required: [true, 'El precio únitario Dolar es necesario']
+    },
     descripcion: {
+        type: String,
+        required: false
+    },
+    unidadm: {
         type: String,
         required: false
     },
     img: {
         type: String,
         required: false
+    },
+    fotourl: {
+        type: String,
+        required: false
+
     },
     disponible: {
         type: Boolean,
