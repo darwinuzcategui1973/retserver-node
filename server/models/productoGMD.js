@@ -5,7 +5,7 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 
 let productoSchema = new Schema({
-    codGMD: {
+    codigo: {
         type: String,
         unique: true,
         required: [true, 'El Código es necesario']
@@ -14,11 +14,11 @@ let productoSchema = new Schema({
         type: String,
         required: [true, 'El nombre es necesario']
     },
-    precioUni: {
+    precioBss: {
         type: Number,
         required: [true, 'El precio únitario es necesario']
     },
-    precioUniDolar: {
+    precioDolares: {
         type: Number,
         required: [true, 'El precio únitario Dolar es necesario']
     },

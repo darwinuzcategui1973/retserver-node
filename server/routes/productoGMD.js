@@ -160,11 +160,11 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
 
 
     let producto = new Producto({
-        codGMD: body.codGMD,
+        codigo: body.codigo,
         nombre: body.nombre,
         unidadm: body.unidadm,
-        precioUni: body.precioUni,
-        precioUniDolar: body.precioUniDolar,
+        precioBss: body.precioBss,
+        precioDolares: body.precioDolares,
         descripcion: body.descripcion,
         grupo: body.grupo,
         marca: body.marca,
@@ -205,7 +205,7 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
 // ==================================
 app.put('/productos/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
-    const arreglo = ["nombre", "precioUniDolar", "precioUni", "descripcion", "img"];
+    const arreglo = ["nombre", "precioDolares", "precioBss", "descripcion", "img"];
     let body = _.pick(req.body, arreglo);
 
 
