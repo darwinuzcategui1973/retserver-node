@@ -205,7 +205,7 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
 // ==================================
 app.put('/productos/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
-    const arreglo = ["nombre", "precioUni", "descripcion", "img"];
+    const arreglo = ["nombre", "precioUniDolar", "precioUni", "descripcion", "img"];
     let body = _.pick(req.body, arreglo);
 
 
