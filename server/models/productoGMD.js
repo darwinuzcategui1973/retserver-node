@@ -34,7 +34,7 @@ let productoSchema = new Schema({
         type: String,
         required: false
     },
-    fotourl: {
+    fotoUrl: {
         type: String,
         required: false
 
