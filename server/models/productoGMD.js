@@ -59,6 +59,11 @@ let productoSchema = new Schema({
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario'
+    },
+    empresa: {
+        type: Schema.Types.ObjectId,
+        ref: 'Empresa',
+        required: true
     }
 });
 

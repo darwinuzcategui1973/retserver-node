@@ -24,6 +24,7 @@ app.get('/productos', verificaToken, (req, res) => {
         .skip(desde)
         .limit(limite)
         .sort("nombre")
+        .populate("empresa", "nombre codigoEmpresa versionSistemas")
         .populate("usuario", "nombre email")
         .populate("grupo", "nombre")
         .populate("marca", "nombre")
@@ -55,6 +56,74 @@ app.get('/productos', verificaToken, (req, res) => {
 
 
 // ==================================
+//  Obtener o lista los Productos
+// ==================================
+app.get('/productosEmpresa', verificaToken, (req, res) => {
+
+
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+    let limite = req.query.limite || 5;
+    let usuario = req.usuario._id;
+    let tipo = req.usuario.role
+    limite = Number(limite);
+
+
+    if (tipo == "USER_ROLE") {
+
+        usuario = req.query.id;
+
+
+
+
+
+    } else {
+        usuario = req.usuario._id;
+
+
+    }
+
+    console.log(usuario);
+    console.log(req.usuario.role);
+
+
+
+    Producto.find({ usuario: usuario, disponible: true })
+        .skip(desde)
+        .limit(limite)
+        .sort("nombre")
+        .populate("empresa", "nombre codigoEmpresa versionSistemas")
+        .populate("usuario", "nombre email")
+        .populate("grupo", "nombre")
+        .populate("marca", "nombre")
+        .exec((error, productos) => {
+            if (error) {
+
+                return res.status(400).json({
+                    ok: false,
+                    error
+                });
+
+            }
+
+
+            Producto.countDocuments({ usuario: usuario, disponible: true }, (error, conteo) => {
+                res.json({
+                    ok: true,
+                    productos,
+                    cuantosReg: conteo
+
+
+
+                });
+            });
+
+        })
+
+});
+
+
+// ==================================
 //  Obtener un Producto por id
 // ==================================
 app.get("/productos/:id", verificaToken, (req, res) => {
@@ -65,6 +134,7 @@ app.get("/productos/:id", verificaToken, (req, res) => {
     // Producto.findById(id);
     Producto.findById(id)
         .populate("usuario", "nombre email")
+        .populate("empresa", "nombre codigoEmpresa versionSistemas")
         .populate("grupo", "nombre")
         .populate("marca", "nombre")
         .exec((error, productoBD) => {
@@ -157,6 +227,11 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
     // let grupo = req.grupo._id;
     // let marca = req.marca._id;
     let usuario = req.usuario._id;
+    let role = req.usuario.role;
+    // muestra un grupo por su Id
+
+    console.log(usuario);
+    console.log(role);
 
 
     let producto = new Producto({
@@ -168,6 +243,7 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
         descripcion: body.descripcion,
         grupo: body.grupo,
         marca: body.marca,
+        empresa: body.empresa,
         usuario
     });
 

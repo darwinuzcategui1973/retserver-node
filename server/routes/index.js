@@ -10,6 +10,7 @@ app.use(require("./marca"));
 app.use(require("./productoGMD"));
 app.use(require("./uploads"));
 app.use(require("./imagenes"));
+app.use(require("./empresa"));
 
 
 module.exports = app;

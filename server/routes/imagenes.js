@@ -35,7 +35,6 @@ app.get('/imagen/:tipo/:img', verificaTokenImg, (req, res) => {
 
 
 
-
 });
 
 
