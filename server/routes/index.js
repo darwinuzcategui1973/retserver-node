@@ -11,6 +11,7 @@ app.use(require("./productoGMD"));
 app.use(require("./uploads"));
 app.use(require("./imagenes"));
 app.use(require("./empresa"));
+app.use(require("./vendedor"));
 
 
 module.exports = app;

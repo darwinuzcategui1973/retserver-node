@@ -24,7 +24,7 @@ app.get('/empresas', verificaToken, (req, res) => {
         .skip(desde)
         .limit(limite)
         .sort("nombre")
-        .populate("usuario", "nombre email")
+        .populate("usuarioADMINISTRADOR", "nombre email")
         .exec((error, empresas) => {
             if (error) {
 

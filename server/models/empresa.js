@@ -13,6 +13,11 @@ let empresaSchema = new Schema({
         type: String,
         required: [true, "El nombre Empresa es Necesario"]
     },
+    disponible: {
+        type: Boolean,
+        required: true,
+        default: true
+    },
     fotourl: {
         type: String,
         required: false
@@ -38,7 +43,7 @@ let empresaSchema = new Schema({
 
     usuarioADMINISTRADOR: {
         type: Schema.Types.ObjectId,
-        required: [true, "DEbe ser Un solo Usuario Administrador por Empresa!"],
+        required: [true, "Debe ser Un solo Usuario Administrador por Empresa!"],
         unique: true,
         ref: 'Usuario'
     },

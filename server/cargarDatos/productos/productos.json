@@ -1,0 +1,36 @@
+{
+    "data": [{
+
+            "codigo": "a03",
+            "nombre": "Productos de la empresa dos",
+            "unidadm": "Unidad",
+            "precioBss": 89900000.12,
+            "precioDolares": 80.5,
+            "descripcion": "otros",
+            "grupo": "5edce45b59f6e52763bd06ec",
+            "marca": "5f4e67d8badfd64690ec1356",
+            "empresa": "5f4d23f03d522342ca958137",
+            "vendedor_proveedor": "5f4e58ad06e97b3da233a60b",
+            "oferta": {
+                "enOferta": false,
+                "ofertaValor": 0.00
+            }
+        },
+        {
+            "codigo": "a04",
+            "nombre": "Productos**** dos",
+            "unidadm": "Unidad",
+            "precioBss": 89900000.12,
+            "precioDolares": 80.5,
+            "descripcion": "otros",
+            "grupo": "5edce45b59f6e52763bd06ec",
+            "marca": "5f4e67d8badfd64690ec1356",
+            "empresa": "5f4d23f03d522342ca958137",
+            "vendedor_proveedor": "5f4e58ad06e97b3da233a60b",
+            "oferta": {
+                "enOferta": false,
+                "ofertaValor": 0.00
+            }
+        }
+    ]
+}
