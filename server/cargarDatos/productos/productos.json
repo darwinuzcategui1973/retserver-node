@@ -1,8 +1,8 @@
 {
     "data": [{
 
-            "codigo": "a03",
-            "nombre": "Productos de la empresa dos",
+            "codigo": "aaa",
+            "nombre": "Productos uno",
             "unidadm": "Unidad",
             "precioBss": 89900000.12,
             "precioDolares": 80.5,
@@ -17,8 +17,8 @@
             }
         },
         {
-            "codigo": "a04",
-            "nombre": "Productos**** dos",
+            "codigo": "",
+            "nombre": "Productos  dos",
             "unidadm": "Unidad",
             "precioBss": 89900000.12,
             "precioDolares": 80.5,

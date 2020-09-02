@@ -7,6 +7,8 @@ const _ = require("underscore");
 let app = express();
 
 let Producto = require('../models/productoGMD');
+const listasProductos = require('../cargarDatos/productos/productos.json');
+const { forEach, isEmpty } = require('underscore');
 
 // ==================================
 //  Obtener o lista los Productos
@@ -272,6 +274,104 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
         });
 
     });
+
+});
+
+// ==================================
+//  Crear nuevos Productos por lista
+// ==================================
+app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) => {
+
+
+    let body = req.body;
+
+    let usuario = req.usuario._id;
+    let role = req.usuario.role;
+
+    // Muestra el Json con los productos
+    let productosLista = listasProductos.data
+
+    // console.log(productosLista);
+    // console.log(productosLista.length);
+    productosLista.forEach(unProducto => {
+        console.log(unProducto.nombre);
+        if (isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo)) {
+            console.log("producto es vacio " + unProducto.nombre);
+            try {
+                var error = isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo);
+                console.log(valido + " " + unProducto.nombre);
+            } catch (error) {
+                return res.status(500).json({
+                    ok: false,
+                    productos: unProducto.nombre,
+                    mensaje: "Faltan datos",
+                    error
+                });
+
+
+            }
+
+            // console.log(valido);
+
+
+
+
+        };
+
+
+    });
+
+
+    /*
+    prueba de Json
+     */
+    res.json({
+        ok: true,
+        producto: productosLista
+    });
+
+    let producto = new Producto({
+        codigo: body.codigo,
+        nombre: body.nombre,
+        unidadm: body.unidadm,
+        precioBss: body.precioBss,
+        precioDolares: body.precioDolares,
+        descripcion: body.descripcion,
+        grupo: body.grupo,
+        marca: body.marca,
+        empresa: body.empresa,
+        usuario
+    });
+
+    /*
+
+    // proceder a grabar
+    producto.save((error, productoDB) => {
+
+        if (error) {
+
+            return res.status(500).json({
+                ok: false,
+                error
+            });
+
+        }
+        if (!productoDB) {
+            return res.status(400).json({
+                ok: false,
+                error
+            });
+
+        }
+
+        res.json({
+            ok: true,
+            producto: productoDB
+        });
+
+    });
+    // final de grabar
+    */
 
 });
 
