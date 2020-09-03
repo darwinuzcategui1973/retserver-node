@@ -1,7 +1,7 @@
 {
     "data": [{
 
-            "codigo": "aaa",
+            "codigo": "8988",
             "nombre": "Productos uno",
             "unidadm": "Unidad",
             "precioBss": 89900000.12,
@@ -17,8 +17,8 @@
             }
         },
         {
-            "codigo": "",
-            "nombre": "Productos  dos",
+            "codigo": "869999899993",
+            "nombre": "pasa dos",
             "unidadm": "Unidad",
             "precioBss": 89900000.12,
             "precioDolares": 80.5,

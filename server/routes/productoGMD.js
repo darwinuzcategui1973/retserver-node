@@ -3,6 +3,7 @@ const express = require('express');
 const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
 
 const _ = require("underscore");
+let productograbadosn = [];
 
 let app = express();
 
@@ -280,7 +281,8 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
 // ==================================
 //  Crear nuevos Productos por lista
 // ==================================
-app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) => {
+
+app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], async(req, res) => {
 
 
     let body = req.body;
@@ -289,18 +291,52 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) =>
     let role = req.usuario.role;
 
     // Muestra el Json con los productos
-    let productosLista = listasProductos.data
+    let productosLista = listasProductos.data;
+    let valido = true;
+
+    let productograbados = [];
 
     // console.log(productosLista);
     // console.log(productosLista.length);
-    productosLista.forEach(unProducto => {
-        console.log(unProducto.nombre);
+    productosLista.forEach(async unProducto => {
+
+        let {
+            codigo,
+            nombre,
+            unidadm,
+            precioBss,
+            precioDolares,
+            descripcion,
+            grupo,
+            marca,
+            empresa,
+            usuario
+
+        } = req.body;
+        let params = req.body;
+        params.codigo = unProducto.codigo;
+        params.nombre = unProducto.nombre;
+        params.unidadm = unProducto.unidadm;
+        params.precioBss = unProducto.precioBss;
+        params.precioDolares = unProducto.precioDolares;
+        params.descripcion = unProducto.descripcion;
+        params.grupo = unProducto.grupo;
+        params.marca = unProducto.marca;
+        params.empresa = unProducto.empresa;
+        params.usuario = usuario;
+        // console.log(unProducto.nombre);
+
+
         if (isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo)) {
-            console.log("producto es vacio " + unProducto.nombre);
-            try {
-                var error = isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo);
-                console.log(valido + " " + unProducto.nombre);
-            } catch (error) {
+            //console.log("producto es vacio " + unProducto.nombre);
+
+            var error = isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo);
+            valido = isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo);
+            // console.log(valido + " " + unProducto.nombre);
+        };
+
+        if (error) {
+            {
                 return res.status(500).json({
                     ok: false,
                     productos: unProducto.nombre,
@@ -310,68 +346,77 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) =>
 
 
             }
-
-            // console.log(valido);
-
-
-
-
         };
 
+        // console.log(valido);
 
-    });
 
 
-    /*
-    prueba de Json
-     */
-    res.json({
-        ok: true,
-        producto: productosLista
-    });
 
-    let producto = new Producto({
-        codigo: body.codigo,
-        nombre: body.nombre,
-        unidadm: body.unidadm,
-        precioBss: body.precioBss,
-        precioDolares: body.precioDolares,
-        descripcion: body.descripcion,
-        grupo: body.grupo,
-        marca: body.marca,
-        empresa: body.empresa,
-        usuario
-    });
 
-    /*
+        if (valido) {
+            let producto = new Producto({
+                codigo: params.codigo,
+                nombre: params.nombre,
+                unidadm: params.unidadm,
+                precioBss: params.precioBss,
+                precioDolares: params.precioDolares,
+                descripcion: params.descripcion,
+                grupo: params.grupo,
+                marca: params.marca,
+                empresa: params.empresa,
+                usuario
 
-    // proceder a grabar
-    producto.save((error, productoDB) => {
 
-        if (error) {
-
-            return res.status(500).json({
-                ok: false,
-                error
             });
 
-        }
-        if (!productoDB) {
-            return res.status(400).json({
-                ok: false,
-                error
+            // proceder a grabar
+            await producto.save(async(error, productoDB) => {
+
+
+
+                if (error) {
+
+                    return res.status(500).json({
+                        ok: false,
+                        error
+                    });
+
+                }
+                if (!productoDB) {
+                    return res.status(400).json({
+                        ok: false,
+                        error
+                    });
+
+                }
+
+
+                res.json({
+                    ok: true,
+                    productos: "Iniciales grabados",
+                    cantidadItem: productosLista.length
+
+
+
+                });
+
+
+
+
+
             });
 
+
         }
 
-        res.json({
-            ok: true,
-            producto: productoDB
-        });
+
+
 
     });
-    // final de grabar
-    */
+
+
+
 
 });
 
@@ -414,6 +459,8 @@ app.put('/productos/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 
 
     });
+
+
 
 });
 
