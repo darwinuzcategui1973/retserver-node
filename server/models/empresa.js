@@ -11,6 +11,7 @@ let empresaSchema = new Schema({
     },
     nombre: {
         type: String,
+        unique: true,
         required: [true, "El nombre Empresa es Necesario"]
     },
     disponible: {
@@ -64,11 +65,20 @@ let empresaSchema = new Schema({
 
 
     },
-    ultimoAcesso: Map,
-    mapOfString: {
-        type: Map,
-        of: Date
+    ultimoAcesso: {
+        Gmdpto: {
+            type: Date,
+            required: false
 
+        },
+        MovilApp: {
+            type: Date,
+            required: false
+        },
+        AppWeb: {
+            type: Date,
+            required: false
+        }
     }
 });
 

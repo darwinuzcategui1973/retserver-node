@@ -1,36 +1,40 @@
 {
     "data": [{
 
-            "codigo": "8988",
-            "nombre": "Productos uno",
+            "codigo": "coco0020",
+            "nombre": "Productos A wuno",
             "unidadm": "Unidad",
             "precioBss": 89900000.12,
             "precioDolares": 80.5,
             "descripcion": "otros",
             "grupo": "5edce45b59f6e52763bd06ec",
             "marca": "5f4e67d8badfd64690ec1356",
-            "empresa": "5f4d23f03d522342ca958137",
+            "empresa": "5f4d0a6510634f335ef45186",
             "vendedor_proveedor": "5f4e58ad06e97b3da233a60b",
             "oferta": {
                 "enOferta": false,
                 "ofertaValor": 0.00
-            }
+            },
+            "destacado": true,
+            "usuario": "5eda617fef52143207c0ef35"
         },
         {
-            "codigo": "869999899993",
-            "nombre": "pasa dos",
+            "codigo": "coco0021",
+            "nombre": "dOS *pasa dos",
             "unidadm": "Unidad",
             "precioBss": 89900000.12,
             "precioDolares": 80.5,
             "descripcion": "otros",
             "grupo": "5edce45b59f6e52763bd06ec",
             "marca": "5f4e67d8badfd64690ec1356",
-            "empresa": "5f4d23f03d522342ca958137",
+            "empresa": "5f4d0a6510634f335ef45186",
             "vendedor_proveedor": "5f4e58ad06e97b3da233a60b",
             "oferta": {
-                "enOferta": false,
-                "ofertaValor": 0.00
-            }
+                "enOferta": true,
+                "ofertaValor": 5.00
+            },
+            "nuevo": true,
+            "usuario": "5eda617fef52143207c0ef35"
         }
     ]
 }

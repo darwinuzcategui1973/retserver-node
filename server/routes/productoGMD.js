@@ -3,7 +3,7 @@ const express = require('express');
 const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
 
 const _ = require("underscore");
-let productograbadosn = [];
+
 
 let app = express();
 
@@ -124,6 +124,76 @@ app.get('/productosEmpresa', verificaToken, (req, res) => {
         })
 
 });
+
+// ======================================================
+//  Obtener la lista los Productos para actulizar sistema
+// =====================================================
+app.get('/productosActulizar', verificaToken, (req, res) => {
+
+
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+    let limite = req.query.limite || 5;
+    let estado = req.query.estado || "INICIAL";
+    let usuario = req.usuario._id;
+    let tipo = req.usuario.role
+    limite = Number(limite);
+    // ESTADO VALIDOS ['INICIAL', 'MODIFICADO', 'NUEVO']
+    // INICIAL: cuando se pasa por primera los datos aqui el sistema local no tiene _id
+    // MODIFICADO: Cuando se modificaron precio es status o otro campo
+    // NUEVO: CUANDO SE CREAR UN PRODUCTOS DESDE EL SISTEMAS GMDPTO
+    //
+
+
+    if (tipo == "USER_ROLE") {
+
+        usuario = req.query.id;
+
+
+
+
+
+    } else {
+        usuario = req.usuario._id;
+
+
+    }
+
+    console.log(usuario);
+    console.log(req.usuario.role);
+    console.log(estado);
+
+
+
+    Producto.find({ usuario: usuario, estado: estado })
+        .skip(desde)
+        .limit(limite)
+        .sort("codigo")
+
+    .exec((error, productos) => {
+        if (error) {
+
+            return res.status(400).json({
+                ok: false,
+                error
+            });
+
+        }
+
+
+        Producto.countDocuments({ usuario: usuario, estado: estado }, (error, conteo) => {
+            res.json({
+                ok: true,
+                productos,
+                estado,
+                cuantosReg: conteo
+            });
+        });
+
+    })
+
+});
+
 
 
 // ==================================
@@ -282,7 +352,7 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
 //  Crear nuevos Productos por lista
 // ==================================
 
-app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], async(req, res) => {
+app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) => {
 
 
     let body = req.body;
@@ -294,7 +364,7 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], async(req, re
     let productosLista = listasProductos.data;
     let valido = true;
 
-    let productograbados = [];
+    let estado = "INICIAL";
 
     // console.log(productosLista);
     // console.log(productosLista.length);
@@ -310,6 +380,9 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], async(req, re
             grupo,
             marca,
             empresa,
+            oferta,
+            destacado,
+            nuevo,
             usuario
 
         } = req.body;
@@ -323,8 +396,12 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], async(req, re
         params.grupo = unProducto.grupo;
         params.marca = unProducto.marca;
         params.empresa = unProducto.empresa;
-        params.usuario = usuario;
-        // console.log(unProducto.nombre);
+        params.oferta = unProducto.oferta;
+        params.destacado = unProducto.destacado;
+        params.nuevo = unProducto.nuevo;
+        params.usuario = unProducto.usuario;
+
+        console.log(params.usuario);
 
 
         if (isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo)) {
@@ -352,6 +429,7 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], async(req, re
 
 
 
+        console.log(usuario);
 
 
         if (valido) {
@@ -365,7 +443,11 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], async(req, re
                 grupo: params.grupo,
                 marca: params.marca,
                 empresa: params.empresa,
-                usuario
+                oferta: params.oferta,
+                destacado: params.destacado,
+                nuevo: params.nuevo,
+                usuario: params.usuario,
+
 
 
             });
@@ -414,8 +496,6 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], async(req, re
 
 
     });
-
-
 
 
 });

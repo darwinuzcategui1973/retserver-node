@@ -54,5 +54,3 @@ vendedorSchema.plugin(uniqueValidator, {
 });
 
 module.exports = mongoose.model("Vendedor", vendedorSchema);
-
-module.exports = mongoose.model("Vendedor", vendedorSchema);

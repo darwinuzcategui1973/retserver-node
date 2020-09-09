@@ -2,6 +2,11 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 const uniqueValidator = require("mongoose-unique-validator");
 
+let estadosValidos = {
+    values: ['INICIAL', 'MODIFICADO', 'NUEVO'],
+    menssage: '{VALUE} no es un Estado válido'
+};
+
 
 
 let productoSchema = new Schema({
@@ -44,6 +49,34 @@ let productoSchema = new Schema({
         required: true,
         default: true
     },
+    oferta: {
+        enOferta: {
+            type: Boolean,
+            required: true,
+            default: false
+
+        },
+        ofertaValor: {
+            type: Number,
+            required: true,
+            default: 0.0
+        }
+    },
+    destacado: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    nuevo: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    estado: {
+        type: String,
+        default: "INICIAL",
+        enum: estadosValidos
+    },
     grupo: {
         type: Schema.Types.ObjectId,
         ref: 'Grupo',
@@ -59,6 +92,11 @@ let productoSchema = new Schema({
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario'
+    },
+    vendedor_proveedor: {
+        type: Schema.Types.ObjectId,
+        ref: 'Vendedor'
+
     },
     empresa: {
         type: Schema.Types.ObjectId,
