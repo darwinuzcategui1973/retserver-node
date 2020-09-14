@@ -157,7 +157,7 @@ app.post("/grupolista", (req, res) => {
         });
         console.log(grupo);
 
-        await grupo.save((error, grupoBD) => {
+        await grupo.save(async(error, grupoBD) => {
 
             if (error) {
 
@@ -180,7 +180,8 @@ app.post("/grupolista", (req, res) => {
 
             res.json({
                 ok: true,
-                grupos: grupoBD
+                grupos: "Iniciales grabados",
+                cantidadItem: lista.length
             });
         });
 
