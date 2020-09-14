@@ -12,7 +12,7 @@ let estadosValidos = {
 let productoSchema = new Schema({
     codigo: {
         type: String,
-        unique: true,
+        //unique: true,
         required: [true, 'El Código es necesario']
     },
     nombre: {

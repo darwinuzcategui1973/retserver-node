@@ -6,7 +6,7 @@ let Schema = mongoose.Schema; //definir los campos de la colección y las reglas
 let grupoSchema = new Schema({
     codigoGrupoGmd: {
         type: String,
-        unique: true,
+        // unique: true,
         required: [true, "El Codigo es Necesario!"]
     },
     nombre: {
