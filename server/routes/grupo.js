@@ -131,6 +131,64 @@ app.post("/grupo", verificaToken, (req, res) => {
 
 });
 
+
+// ===============================
+//  Crear lista de Nuevos Grupos
+// ===============================
+app.post("/grupolista", (req, res) => {
+    // regresa el nuevo grupo
+    // req.usuario._id
+
+    let body = req.body;
+    let lista = req.body.data
+    console.log("Lista de Grupos")
+        //console.log(lista)
+        //let idUsuario = req.usuario._id
+
+    lista.forEach(async unItem => {
+        console.log(unItem)
+        let grupo = new Grupo({
+            codigoGrupoGmd: unItem.codigoGrupoGmd,
+            nombre: unItem.nombre,
+            idUsuario: unItem.Idusuario,
+            usuario: unItem.usuario
+
+
+        });
+        console.log(grupo);
+
+        await grupo.save((error, grupoBD) => {
+
+            if (error) {
+
+                return res.status(500).json({
+                    ok: false,
+                    error
+                });
+
+
+
+
+            }
+            if (!grupoBD) {
+                return res.status(400).json({
+                    ok: false,
+                    error
+                });
+
+            }
+
+            res.json({
+                ok: true,
+                grupos: grupoBD
+            });
+        });
+
+
+    });
+});
+
+
 // ===============================
 //  Actulizar  Grupos
 // ===============================
