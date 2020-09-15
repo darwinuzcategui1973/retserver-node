@@ -133,6 +133,67 @@ app.post("/vendedor", verificaToken, (req, res) => {
 });
 
 // ===============================
+//  Crear un Nuevo lista deVendedors
+// ===============================
+app.post("/vendedorlista", (req, res) => {
+
+
+    let body = req.body;
+    let lista = req.body.data
+    console.log("Lista de vendedores")
+
+
+    lista.forEach(async unItem => {
+        console.log(unItem)
+        let vendedor = new Vendedor({
+            codigoVendedorGmd: unItem.codigoVendedorGmd,
+            nombre: unItem.nombre,
+            infVendedor: unItem.infVendedor,
+            usuario: unItem.usuario,
+            idUsuario: unItem.idUsuario
+
+        });
+        console.log(vendedor);
+
+        await vendedor.save(async(error, vendedorBD) => {
+
+            if (error) {
+
+                return res.status(500).json({
+                    ok: false,
+                    error
+                });
+
+
+
+            }
+            if (!vendedorBD) {
+                return res.status(400).json({
+                    ok: false,
+                    error
+                });
+
+            }
+
+
+        });
+
+
+    });
+
+    res.json({
+        ok: true,
+        vendedor: "Iniciales grabados",
+        cantidadItem: lista.length
+    });
+
+
+});
+
+// +++++++ FIN DE LISTA VENDEDORES +++++++++++
+
+
+// ===============================
 //  Actulizar  Vendedors
 // ===============================
 app.put('/vendedor/:id', verificaToken, (req, res) => {

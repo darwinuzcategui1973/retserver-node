@@ -126,6 +126,65 @@ app.post("/marca", verificaToken, (req, res) => {
 
 });
 
+app.post("/marcalista", (req, res) => {
+
+    // regresa el nuevo grupo
+    // req.usuario._id
+
+    let body = req.body;
+    let lista = req.body.data
+    console.log("Lista de Marcas")
+
+
+    lista.forEach(async unItem => {
+        console.log(unItem)
+        let marca = new Marca({
+            codigoMarcaGmd: unItem.codigoMarcaGmd,
+            nombre: unItem.nombre,
+            usuario: unItem.usuario
+
+
+        });
+        console.log(marca);
+
+        await marca.save(async(error, marcaBD) => {
+
+            if (error) {
+
+                return res.status(500).json({
+                    ok: false,
+                    error
+                });
+
+
+
+
+            }
+            if (!marcaBD) {
+                return res.status(400).json({
+                    ok: false,
+                    error
+                });
+
+            }
+
+
+        });
+
+
+    });
+
+    res.json({
+        ok: true,
+        marcas: "Iniciales grabados",
+        cantidadItem: lista.length
+    });
+
+
+});
+
+// +++++++ FIN DE LISTA GRUPOS +++++++++++
+
 // ===============================
 //  Actulizar  Marcas
 // ===============================
@@ -169,7 +228,6 @@ app.put('/marca/:id', verificaToken, (req, res) => {
 // ===============================
 // Eliminar un marca Marcas
 // ===============================
-
 app.delete('/marca/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
     Marca.findByIdAndRemove(id, (error, marcaBorrado) => {

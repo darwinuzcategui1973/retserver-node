@@ -136,6 +136,7 @@ app.post("/grupo", verificaToken, (req, res) => {
 //  Crear lista de Nuevos Grupos
 // ===============================
 app.post("/grupolista", (req, res) => {
+
     // regresa el nuevo grupo
     // req.usuario._id
 
@@ -178,16 +179,22 @@ app.post("/grupolista", (req, res) => {
 
             }
 
-            res.json({
-                ok: true,
-                grupos: "Iniciales grabados",
-                cantidadItem: lista.length
-            });
+
         });
 
 
     });
+
+    res.json({
+        ok: true,
+        grupos: "Iniciales grabados",
+        cantidadItem: lista.length
+    });
+
+
 });
+
+// +++++++ FIN DE LISTA GRUPOS +++++++++++
 
 
 // ===============================
