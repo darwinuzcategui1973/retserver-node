@@ -195,7 +195,6 @@ app.get('/productosActulizar', verificaToken, (req, res) => {
 });
 
 
-
 // ==================================
 //  Obtener un Producto por id
 // ==================================

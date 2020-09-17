@@ -135,7 +135,7 @@ app.post("/grupo", verificaToken, (req, res) => {
 // ===============================
 //  Crear lista de Nuevos Grupos
 // ===============================
-app.post("/grupolista", (req, res) => {
+app.post("/grupolista", [verificaToken, verificaAdmin_Role], (req, res) => {
 
     // regresa el nuevo grupo
     // req.usuario._id
