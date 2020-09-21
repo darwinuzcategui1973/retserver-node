@@ -79,7 +79,11 @@ let empresaSchema = new Schema({
             type: Date,
             required: false
         }
-    }
+    },
+
+}, {
+    timestamps: true,
+    versionKey: false
 });
 
 empresaSchema.plugin(uniqueValidator, {

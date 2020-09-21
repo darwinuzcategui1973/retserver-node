@@ -160,7 +160,7 @@ app.post("/empresas", [verificaToken, verificaAdmin_Role], (req, res) => {
         versionSistemas: body.versionSistemas,
         ultimoAcesso: body.ultimoAcesso,
         informacionEmpresa: body.informacionEmpresa,
-        usuarioADMINISTRADOR
+        usuarioADMINISTRADOR: body.usuarioADMINISTRADOR
     });
 
     // proceder a grabar

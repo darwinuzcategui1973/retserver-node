@@ -3,6 +3,11 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 // obtener el esquema
 let Schema = mongoose.Schema; //definir los campos de la colección y las reglas.
+let estadosValidos = {
+    values: ['INICIAL', 'MODIFICADO', 'NUEVO'],
+    menssage: '{VALUE} no es un Estado válido'
+};
+
 let vendedorSchema = new Schema({
     codigoVendedorGmd: {
         type: String,
@@ -42,12 +47,19 @@ let vendedorSchema = new Schema({
     fotourl: {
         type: String,
         required: false
-
+    },
+    estado: {
+        type: String,
+        default: "INICIAL",
+        enum: estadosValidos
     },
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario'
-    }
+    },
+}, {
+    timestamps: true,
+    versionKey: false
 });
 
 vendedorSchema.plugin(uniqueValidator, {

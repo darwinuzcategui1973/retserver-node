@@ -40,8 +40,10 @@ let usuarioSchema = new Schema({
     google: {
         type: Boolean,
         default: false
-    }
-
+    },
+}, {
+    timestamps: true,
+    versionKey: false
 });
 
 usuarioSchema.methods.toJSON = function() {

@@ -7,10 +7,8 @@ let estadosValidos = {
     menssage: '{VALUE} no es un Estado válido'
 };
 
-
-
 let productoSchema = new Schema({
-    codigo: {
+    codigoProductoGmd: {
         type: String,
         //unique: true,
         required: [true, 'El Código es necesario']
@@ -102,7 +100,10 @@ let productoSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Empresa',
         required: true
-    }
+    },
+}, {
+    timestamps: true,
+    versionKey: false
 });
 
 productoSchema.plugin(uniqueValidator, {

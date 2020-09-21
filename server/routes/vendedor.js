@@ -42,6 +42,52 @@ app.get("/vendedor", verificaToken, (req, res) => {
 });
 
 // ===============================
+// Mostrar todos los Marcas iniciales
+// ===============================
+app.get('/vendedorsInicial', verificaToken, (req, res) => {
+
+    let estado = req.query.estado || "INICIAL";
+    let usuario = req.usuario._id;
+    let tipo = req.usuario.role
+
+    if (tipo == "USER_ROLE") {
+
+        usuario = req.query.id;
+
+    } else {
+        usuario = req.usuario._id;
+
+    }
+
+    Vendedor.find({ usuario: usuario, estado: estado })
+        .sort("codigoVendedorGmd")
+
+    .exec((error, vendedors) => {
+        if (error) {
+
+            return res.status(400).json({
+                ok: false,
+                error
+            });
+
+        }
+
+
+        Vendedor.countDocuments({ usuario: usuario, estado: estado }, (error, conteo) => {
+            res.json({
+                ok: true,
+                vendedors,
+                estado,
+                cuantosReg: conteo
+            });
+        });
+
+    })
+
+});
+
+
+// ===============================
 // Mostrar un vendedor por ID
 // ===============================
 app.get("/vendedor/:id", verificaToken, (req, res) => {
@@ -135,8 +181,7 @@ app.post("/vendedor", verificaToken, (req, res) => {
 // ===============================
 //  Crear un Nuevo lista deVendedors
 // ===============================
-app.post("/vendedorlista", (req, res) => {
-
+app.post("/vendedorlista", [verificaToken, verificaAdmin_Role], (req, res) => {
 
     let body = req.body;
     let lista = req.body.data

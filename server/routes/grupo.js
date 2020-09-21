@@ -41,6 +41,66 @@ app.get("/grupo", verificaToken, (req, res) => {
 
 });
 
+
+// ======================================================
+//  Mostar todos los grupos nuevos y id
+// =====================================================
+app.get('/gruposInicial', verificaToken, (req, res) => {
+
+
+
+
+    let estado = req.query.estado || "INICIAL";
+    let usuario = req.usuario._id;
+    let tipo = req.usuario.role
+        // ESTADO VALIDOS ['INICIAL', 'MODIFICADO', 'NUEVO']
+        // INICIAL: cuando se pasa por primera los datos aqui el sistema local no tiene _id
+        // MODIFICADO: Cuando se modificaron precio es status o otro campo
+        // NUEVO: CUANDO SE CREAR UN PRODUCTOS DESDE EL SISTEMAS GMDPTO
+        //
+
+
+    if (tipo == "USER_ROLE") {
+
+        usuario = req.query.id;
+
+
+
+    } else {
+        usuario = req.usuario._id;
+
+
+    }
+    console.log(usuario);
+    //usuario: usuario,
+    Grupo.find({ usuario: usuario, estado: estado })
+        .sort("codigoGrupoGmd")
+
+    .exec((error, grupos) => {
+        if (error) {
+
+            return res.status(400).json({
+                ok: false,
+                error
+            });
+
+        }
+
+
+        Grupo.countDocuments({ usuario: usuario, estado: estado }, (error, conteo) => {
+            res.json({
+                ok: true,
+                grupos,
+                estado,
+                cuantosReg: conteo
+            });
+        });
+
+    })
+
+});
+
+
 // ===============================
 // Mostrar un grupo por ID
 // ===============================
@@ -131,7 +191,6 @@ app.post("/grupo", verificaToken, (req, res) => {
 
 });
 
-
 // ===============================
 //  Crear lista de Nuevos Grupos
 // ===============================
@@ -142,6 +201,11 @@ app.post("/grupolista", [verificaToken, verificaAdmin_Role], (req, res) => {
 
     let body = req.body;
     let lista = req.body.data
+    let idUsuario1 = req.usuario._id
+    let usuario1 = req.usuario.nombre
+    console.log(idUsuario1)
+    console.log("Lista de Grupos")
+
     console.log("Lista de Grupos")
         //console.log(lista)
         //let idUsuario = req.usuario._id
@@ -192,6 +256,8 @@ app.post("/grupolista", [verificaToken, verificaAdmin_Role], (req, res) => {
     });
 
 
+
+
 });
 
 // +++++++ FIN DE LISTA GRUPOS +++++++++++
@@ -237,10 +303,10 @@ app.put('/grupo/:id', verificaToken, (req, res) => {
     });
 
 });
+
 // ===============================
 // Eliminar un grupo Grupos
 // ===============================
-
 app.delete('/grupo/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
     Grupo.findByIdAndRemove(id, (error, grupoBorrado) => {

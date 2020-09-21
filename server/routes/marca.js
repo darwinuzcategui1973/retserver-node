@@ -42,6 +42,52 @@ app.get("/marca", verificaToken, (req, res) => {
 });
 
 // ===============================
+// Mostrar todos los Marcas iniciales
+// ===============================
+app.get('/marcasInicial', verificaToken, (req, res) => {
+
+    let estado = req.query.estado || "INICIAL";
+    let usuario = req.usuario._id;
+    let tipo = req.usuario.role
+
+    if (tipo == "USER_ROLE") {
+
+        usuario = req.query.id;
+
+    } else {
+        usuario = req.usuario._id;
+
+    }
+
+    Marca.find({ usuario: usuario, estado: estado })
+        .sort("codigoMarcaGmd")
+
+    .exec((error, marcas) => {
+        if (error) {
+
+            return res.status(400).json({
+                ok: false,
+                error
+            });
+
+        }
+
+
+        Marca.countDocuments({ usuario: usuario, estado: estado }, (error, conteo) => {
+            res.json({
+                ok: true,
+                marcas,
+                estado,
+                cuantosReg: conteo
+            });
+        });
+
+    })
+
+});
+
+
+// ===============================
 // Mostrar un marca por ID
 // ===============================
 app.get("/marca/:id", verificaToken, (req, res) => {
@@ -126,10 +172,9 @@ app.post("/marca", verificaToken, (req, res) => {
 
 });
 
-app.post("/marcalista", (req, res) => {
+app.post("/marcalista", [verificaToken, verificaAdmin_Role], (req, res) => {
 
-    // regresa el nuevo grupo
-    // req.usuario._id
+
 
     let body = req.body;
     let lista = req.body.data
@@ -183,7 +228,7 @@ app.post("/marcalista", (req, res) => {
 
 });
 
-// +++++++ FIN DE LISTA GRUPOS +++++++++++
+// +++++++ FIN DE LISTA marcas +++++++++++
 
 // ===============================
 //  Actulizar  Marcas

@@ -151,24 +151,17 @@ app.get('/productosActulizar', verificaToken, (req, res) => {
 
 
 
-
-
     } else {
         usuario = req.usuario._id;
 
 
     }
 
-    console.log(usuario);
-    console.log(req.usuario.role);
-    console.log(estado);
-
-
 
     Producto.find({ usuario: usuario, estado: estado })
         .skip(desde)
         .limit(limite)
-        .sort("codigo")
+        .sort("codigoProductoGmd")
 
     .exec((error, productos) => {
         if (error) {
@@ -307,7 +300,7 @@ app.post("/productos", [verificaToken, verificaAdmin_Role], (req, res) => {
 
 
     let producto = new Producto({
-        codigo: body.codigo,
+        codigoProductoGmd: body.codigoProductoGmd,
         nombre: body.nombre,
         unidadm: body.unidadm,
         precioBss: body.precioBss,
@@ -360,7 +353,8 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) =>
     let role = req.usuario.role;
 
     // Muestra el Json con los productos
-    let productosLista = listasProductos.data;
+    //let productosLista = listasProductos.data;
+    let productosLista = req.body.data
     let valido = true;
 
     let estado = "INICIAL";
@@ -370,7 +364,7 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) =>
     productosLista.forEach(async unProducto => {
 
         let {
-            codigo,
+            codigoProductoGmd,
             nombre,
             unidadm,
             precioBss,
@@ -386,7 +380,7 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) =>
 
         } = req.body;
         let params = req.body;
-        params.codigo = unProducto.codigo;
+        params.codigoProductoGmd = unProducto.codigoProductoGmd;
         params.nombre = unProducto.nombre;
         params.unidadm = unProducto.unidadm;
         params.precioBss = unProducto.precioBss;
@@ -433,7 +427,7 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) =>
 
         if (valido) {
             let producto = new Producto({
-                codigo: params.codigo,
+                codigoProductoGmd: params.codigoProductoGmd,
                 nombre: params.nombre,
                 unidadm: params.unidadm,
                 precioBss: params.precioBss,

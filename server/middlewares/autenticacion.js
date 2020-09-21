@@ -13,7 +13,7 @@ let verificaToken = (req, res, next) => {
             return res.status(401).json({
                 ok: false,
                 err: {
-                    message: 'Token no Valido'
+                    message: '*Token no Valido*'
                 }
             });
         }
@@ -62,7 +62,7 @@ let verificaTokenImg = (req, res, next) => {
             return res.status(401).json({
                 ok: false,
                 err: {
-                    message: 'Token no Valido'
+                    message: '*Token no Valido*'
                 }
             });
         }
