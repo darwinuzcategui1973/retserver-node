@@ -361,6 +361,7 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) =>
 
     // console.log(productosLista);
     // console.log(productosLista.length);
+    console.log(productosLista);
     productosLista.forEach(async unProducto => {
 
         let {
@@ -397,11 +398,11 @@ app.post("/productosSaveAll", [verificaToken, verificaAdmin_Role], (req, res) =>
         console.log(params.usuario);
 
 
-        if (isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo)) {
+        if (isEmpty(unProducto.nombre) || isEmpty(unProducto.codigoProductoGmd)) {
             //console.log("producto es vacio " + unProducto.nombre);
 
-            var error = isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo);
-            valido = isEmpty(unProducto.nombre) || isEmpty(unProducto.codigo);
+            var error = isEmpty(unProducto.nombre) || isEmpty(unProducto.codigoProductoGmd);
+            valido = isEmpty(unProducto.nombre) || isEmpty(unProducto.codigoProductoGmd);
             // console.log(valido + " " + unProducto.nombre);
         };
 
