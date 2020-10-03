@@ -1,7 +1,10 @@
+require('dotenv').config();
+//console.log(process.env);
+
 // ================================
-//  Puerto
+//  Puerto!!
 // ================================
-process.env.PORT = process.env.PORT || 3000;
+process.env.PORT = process.env.PORT ||  process.env.PUERTOlocal || 3000 ;
 
 
 //================================
