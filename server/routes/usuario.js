@@ -1,277 +1,67 @@
+/*
+    Ruta: "/api/usuarios
+
+*/
 //importaciones
-const express = require('express');
+const { Router } = require('express');
+const { check } = require ( 'express-validator' );
 
-const bcrypt = require("bcrypt");
-
-const _ = require("underscore");
-
-
-const Usuario = require("../models/usuario");
+const { 
+        getUsuarios,
+        getUsuariosSinToken,
+        crearUsuario,
+        actulizarUsuario,
+        eliminarUsuario,
+        marcarElimUsuario
+  } = require('../controller/usuarios.ctl');
 
 const {
-    verificaToken,
-    verificaAdmin_Role
-} = require("../middlewares/autenticacion")
+        verificaToken,
+        verificaAdmin_Role
+    } = require("../middlewares/autenticacion")
+
+const { validarCampos } = require('../middlewares/validar-campos');
+
+const ruta = Router();
 
 
-
-const app = express();
+//const app = express();
 
 //rutas
-
-// petición GET
-app.get('/usuario', verificaToken, (req, res) => {
-
-
-    let desde = req.query.desde || 0;
-    desde = Number(desde);
-    let limite = req.query.limite || 5;
-    limite = Number(limite);
-
-
-    Usuario.find({ estado: true }, "nombre email role estado google img")
-        .skip(desde)
-        .limit(limite)
-        .exec((error, usuarios) => {
-            if (error) {
-
-                return res.status(400).json({
-                    ok: false,
-                    error
-                });
-
-            }
-            // Usuario.count({ estado: true }, (error, conteo) => {
-
-            Usuario.countDocuments({ estado: true }, (error, conteo) => {
-                res.json({
-                    ok: true,
-                    usuarios,
-                    cuantosReg: conteo
-
-
-
-                });
-            });
-
-        })
-
-});
-// usuario sin token
-// petición GET
-app.get('/usuario_sin_token', (req, res) => {
-
-
-    let desde = req.query.desde || 0;
-    desde = Number(desde);
-    let limite = req.query.limite || 5;
-    limite = Number(limite);
-
-
-    Usuario.find({ estado: true }, "nombre email role estado google img")
-        .skip(desde)
-        .limit(limite)
-        .exec((error, usuarios) => {
-            if (error) {
-
-                return res.status(400).json({
-                    ok: false,
-                    error
-                });
-
-            }
-            // Usuario.count({ estado: true }, (error, conteo) => {
-
-            Usuario.countDocuments({ estado: true }, (error, conteo) => {
-                res.json({
-                    ok: true,
-                    usuarios,
-                    cuantosReg: conteo
-
-
-
-                });
-            });
-
-        })
-
-});
-
-// petición POST
-app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
-
-    let body = req.body;
-
-    let usuario = new Usuario({
-        nombre: body.nombre,
-        email: body.email,
-        password: bcrypt.hashSync(body.password, 10),
-        role: body.role
-    });
-    usuario.save((error, usuarioDB) => {
-
-        if (error) {
-
-            return res.status(400).json({
-                ok: false,
-                error
-            });
-
-        }
-        // usuarioDB.password = null;
-
-        res.json({
-            ok: true,
-            usuario: usuarioDB
-        });
-
-    });
-
-
-});
-
-// petición PUT
-app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
-    let id = req.params.id;
-    const arreglo = ["nombre", "img", "role", "email", "estado"];
-    let body = _.pick(req.body, arreglo);
-
-
-    //delete body.google
-
-    Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (error, usuarioBD) => {
-
-        if (error) {
-
-            return res.status(400).json({
-                ok: false,
-                error
-            });
-
-        };
-
-
-        res.json({
-            ok: true,
-            usuario: usuarioBD
-        });
-
-
-    });
-
-});
-
-// petición delete
-app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
-    let id = req.params.id;
-    Usuario.findByIdAndRemove(id, (error, usuarioBorrado) => {
-
-        if (error) {
-
-            return res.status(400).json({
-                ok: false,
-                error
-            });
-
-        };
-
-        // voy a seguir en video 15 seccion 9
-
-        if (!usuarioBorrado) {
-            return res.status(400).json({
-                ok: false,
-                error: {
-                    message: "Usuario no Encontrado!."
-                }
-            });
-        }
-
-        res.json({
-            ok: true,
-            usuario: usuarioBorrado
-        });
-
-
-    });
-});
-
-// petición delete solo marcar el estado
-app.delete('/usuario/marcar/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
-    let id = req.params.id;
-    const arreglo = ["estado"];
-    let body = _.pick(req.body, arreglo);
-
-    body.estado = false;
-
-    Usuario.findByIdAndUpdate(id, body, { new: true }, (error, usuarioBD) => {
-
-        if (error) {
-
-            return res.status(400).json({
-                ok: false,
-                error
-            });
-
-        };
-
-        // voy a seguir en video 15 seccion 9
-
-        if (!usuarioBD) {
-            return res.status(400).json({
-                ok: false,
-                error: {
-                    message: "Usuario no Encontrado!."
-                }
-            });
-        }
-
-        res.json({
-            ok: true,
-            usuario: usuarioBD
-        });
-
-
-    });
-});
-
-// petición delete solo marcar como el curso
-app.delete('/usuario/marcar1/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
-    let id = req.params.id;
-    let cambioEstado = {
-        "estado": false
-    };
-
-
-    Usuario.findByIdAndUpdate(id, cambioEstado, { new: true }, (error, usuarioBD) => {
-
-
-        if (error) {
-
-            return res.status(400).json({
-                ok: false,
-                error
-            });
-
-        };
-
-        // voy a seguir en video 15 seccion 9
-
-        if (!usuarioBD) {
-            return res.status(400).json({
-                ok: false,
-                error: {
-                    message: "Usuario no Encontrado!."
-                }
-            });
-        }
-
-        res.json({
-            ok: true,
-            usuario: usuarioBD
-        });
-
-
-    });
-});
-
-module.exports = app;
+// Ruta :usuario
+//*************************************************************
+// petición GET de usuarios
+//*************************************************************
+ruta.get('/',verificaToken, getUsuarios);
+ruta.get('/sintoken/', getUsuariosSinToken);
+ruta.post('/',
+    [
+        verificaToken,
+        verificaAdmin_Role,
+        check('nombre',"El Nombre es Obligatorio").notEmpty(),
+        check('password',"El Password es obligatorio").not().isEmpty(),
+        check('email',"Email debe ser de tipo Email").isEmail(),
+        validarCampos
+    ]
+ ,crearUsuario);
+
+ ruta.put('/:id',
+  [
+    verificaToken,
+    verificaAdmin_Role,
+    check('nombre',"El Nombre es Obligatorio").notEmpty(),
+    check('password',"El Password es obligatorio").not().isEmpty(),
+    check('role',"Role es Obligatorio").not().isEmpty(),
+    validarCampos
+   ],
+   actulizarUsuario);
+   ruta.delete('/:id',
+   [
+     verificaToken,
+     verificaAdmin_Role
+   ],eliminarUsuario);
+
+   ruta.delete('/marcar/:id',marcarElimUsuario);
+
+
+module.exports = ruta;
