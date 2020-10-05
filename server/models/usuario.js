@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
+
 let rolesValidos = {
     values: ['SUPER_USER', 'ADMIN_ROLE', 'USER_ROLE'],
     menssage: '{VALUE} no es un rol válido'
@@ -45,14 +46,26 @@ let usuarioSchema = new Schema({
     timestamps: true,
     versionKey: false
 });
-
+/*
 usuarioSchema.methods.toJSON = function() {
     let user = this;
     let userObject = user.toObject();
     delete userObject.password;
+    userObject.usuId=userObject._id ;
+    delete userObject._id;
     return userObject;
 
 }
+*/
+// tambien lo puedo hacer de esta manera
+
+usuarioSchema.methods.toJSON = function() {
+    const { password, _id,__v,...object } = this.toObject();
+    object.usuId=_id;
+    return object; 
+}
+
+
 
 usuarioSchema.plugin(uniqueValidator, {
     message: '{PATH} debe Ser Unico'
