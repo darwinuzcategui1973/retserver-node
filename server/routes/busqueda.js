@@ -12,6 +12,7 @@ const { check } = require ( 'express-validator' );
 
 const { 
         getTodos,
+        getBuscarDocumentosColeccion
        
   } = require('../controller/busqueda.ctl');
 
@@ -28,6 +29,13 @@ const ruta = Router();
 // petición GET de  Buscar Empresas por un termino
 //*************************************************************
 ruta.get('/:termino',verificaToken, getTodos);
+
+//***************************************************************
+// petición GET de  Buscar de una coleccion especifica un termino
+//***************************************************************
+ruta.get('/coleccion/:tabla/:termino',verificaToken, getBuscarDocumentosColeccion);
+       //'/coleccion/:tabla/:busqueda',
+
 
 
 // ** exportacion del modulo

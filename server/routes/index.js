@@ -10,6 +10,7 @@ app.use("/api/login", require('./login'));
 app.use("/api/usuario", require('./usuario'));
 app.use("/api/empresas", require('./empresa'));
 app.use("/api/todos", require('./busqueda'));
+app.use("/api/upload",require("./uploads"));
 
 /*
 app.use(require("./login"));
