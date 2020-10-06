@@ -2,7 +2,9 @@
     Ruta: "/api/usuarios
 
 */
+
 //importaciones
+
 const { Router } = require('express');
 const { check } = require ( 'express-validator' );
 
@@ -13,7 +15,7 @@ const {
         actulizarUsuario,
         eliminarUsuario,
         marcarElimUsuario
-  } = require('../controller/usuarios.ctl');
+  } = require('../controller/usuario.ctl');
 
 const {
         verificaToken,

@@ -60,7 +60,7 @@ let vendedorSchema = new Schema({
 }, {
     timestamps: true,
     versionKey: false
-});
+}, {  collection: 'vendedores' });
 
 vendedorSchema.plugin(uniqueValidator, {
     message: '{PATH} debe Ser Unico'

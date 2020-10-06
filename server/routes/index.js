@@ -1,4 +1,3 @@
-const ruta = require('./usuario')
 const express = require('express');
 
 
@@ -6,7 +5,12 @@ const express = require('express');
 const app = express();
 
 // aqui van todas las rutas
-ruta.use(require("./usuario"));
+// configuración global de rutas.
+app.use("/api/login", require('./login'));
+app.use("/api/usuario", require('./usuario'));
+app.use("/api/empresas", require('./empresa'));
+app.use("/api/todos", require('./busqueda'));
+
 /*
 app.use(require("./login"));
 app.use(require("./grupo"));
@@ -18,4 +22,4 @@ app.use(require("./empresa"));
 app.use(require("./vendedor"));
 */
 
-module.exports =ruta;
+module.exports =app;

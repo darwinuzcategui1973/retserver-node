@@ -65,6 +65,8 @@ const verificaToken = (req, res, next) => {
 
     //acceder al req de header  
     const token = req.header("token");
+
+    // console.log(token);
     
     if (!token) {
         return res.status(401).json({
@@ -78,6 +80,7 @@ const verificaToken = (req, res, next) => {
         const { usuario } = jwt.verify(token, process.env.SEED);
         
         req.usuario = usuario;
+        // console.log(usuario);
         
         next();
         

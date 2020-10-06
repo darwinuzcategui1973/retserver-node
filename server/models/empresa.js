@@ -1,9 +1,15 @@
-const mongoose = require("mongoose");
+// importaciones el schema y model
+const { Schema, model } = require('mongoose');
 const uniqueValidator = require("mongoose-unique-validator");
 
-// obtener el esquema
-let Schema = mongoose.Schema; //definir los campos de la colección y las reglas.
-let empresaSchema = new Schema({
+// let Schema = mongoose.Schema;
+// let empresaSchema = new Schema({
+
+
+
+ //definir los campos de la colección y las reglas.
+
+const EmpresaSchema = Schema({
     codigoEmpresa: {
         type: String,
         unique: true,
@@ -86,24 +92,18 @@ let empresaSchema = new Schema({
     versionKey: false
 });
 
-empresaSchema.plugin(uniqueValidator, {
+// asi para como quiere que apoarezca tu coleccion
+// , {  collection: 'hospitales' });
+
+// para validar sobrescibir metodos
+EmpresaSchema.plugin(uniqueValidator, {
     message: '{PATH} debe Ser Unico'
 });
 
-// version
-//versionSistemas {"Gmdpto" =>"Ver2020","AppMovil=>"1.10","WebGMD"=>"v15"}
-/*
-// versionSistemas:{
-    gmdpto: "ver2020",
-    appMOvil: "1.10",
-    webGMD: "v15"
+EmpresaSchema.method('toJSON', function() {
+    const { __v, ...object } = this.toObject();
+    return object;
+});
 
-}
-// UltimoAcesso:{
-    gmdpto: 15/12/2020,
-    appMOvil: 16/12/2020,
-    webGMD: 16/12/2020
-
-}
-*/
-module.exports = mongoose.model("Empresa", empresaSchema);
+module.exports = model( 'Empresa', EmpresaSchema );
+//module.exports = mongoose.model("Empresa", empresaSchema);

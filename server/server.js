@@ -47,10 +47,8 @@ app.use(express.static(path.resolve(__dirname, "../public")));
 
 
 
-// configuración global de rutas.
-app.use("/api/usuario", require('./routes/usuario'));
-app.use("/api/login", require('./routes/login'));
-//ruta.use(require("./routes/index"));
+// configuración archivos tienes todas las rutas.
+app.use(require("./routes/index"));
 
 
 // console.log(process.env);
