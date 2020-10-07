@@ -14,6 +14,8 @@ const Usuario = require("../models/usuario");
 
 const { generarJwt } = require('../helpers/jwt');
 
+const { googleVerify } = require('../helpers/google-verify');
+
 // const app = express();
 
 
@@ -76,111 +78,55 @@ const login = async (req, res) => {
 
 
 // CONFIGURACION DE GOOGLE SERVICIO
+const google = async(req, res=response) => {
 
+    const googleToken = req.body.token;
 
-const google = async(req, res) => {
+    try {
 
-    let token = req.body.idtoken;
+        const { name, email, picture } = await googleVerify( googleToken );
 
-    let googleUser = await verify(token).
-    catch(e => {
-        return res.status(403).json({
-            ok: false,
-            err: e
-        });
-    });
-    /*
-    esta funcionando
-    ahora mando  grabar 
-        res.json({
-            usuario: googleUser
-        });
+        const usuarioDB = await Usuario.findOne({ email });
+        let usuario;
 
-        */
-    // busco en la base de datos para ver si existe
-    Usuario.findOne({ email: googleUser.email }, (error, usuarioBD) => {
-
-        if (error) {
-
-            return res.status(500).json({
-                ok: false,
-                error
+        if ( !usuarioDB ) {
+            // si no existe el usuario
+            
+            usuario = new Usuario({
+                nombre: name,
+                email,
+                password: '@@@usuarioDeGoogle',
+                img: picture,
+                google: true
             });
-
-        };
-
-        if (usuarioBD) {
-
-            if (usuarioBD.google == false) {
-
-                return res.status(400).json({
-                    ok: false,
-                    err: {
-                        message: "Debe de usar su autenticación normal!"
-
-                    }
-                });
-
-            } else {
-                let token = jwt.sign({
-                    usuario: usuarioBD
-
-                }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
-
-                res.json({
-                    ok: true,
-                    usuario: usuarioBD,
-                    token
-                })
-
-
-            }
-
-
         } else {
-            // si el usuario de google no existe en nueestra base datos
-            let usuario = new Usuario();
-            usuario.nombre = googleUser.nombre;
-            usuario.email = googleUser.email;
-            usuario.img = googleUser.img;
+            // existe usuario
+            usuario = usuarioDB;
             usuario.google = true;
-            usuario.password = ":)";
-
-            usuario.save((error, usuarioBD) => {
-
-                if (error) {
-
-                    return res.status(500).json({
-                        ok: false,
-                        error
-                    });
-
-                };
-
-                let token = jwt.sign({
-                    usuario: usuarioBD
-
-                }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
-
-                res.json({
-                    ok: true,
-                    usuario: usuarioBD,
-                    token
-                });
-
-
-
-            });
-
-
-
-
         }
 
-    });
+        // Guardar en DB
+        await usuario.save();
 
+        // Generar el TOKEN - JWT
+        const token = await generarJwt( usuario );
+        
+        res.json({
+            ok: true,
+            token,
+            name, email, picture
+           // menu: getMenuFrontEnd( usuario.role )
+        });
 
-};
+    } catch (error) {
+        
+        res.status(401).json({
+            ok: false,
+            msg: 'Token no es correcto',
+        });
+    }
+
+}
 
 module.exports = {
     login,

@@ -27,4 +27,13 @@ ruta.post('/',
 
 ],login)
 
+ruta.post('/google',
+[
+
+    check('token',"El token es obligatorio").not().isEmpty(),
+    validarCampos
+   
+
+],google)
+
 module.exports = ruta;

@@ -1,8 +1,14 @@
 const Usuario = require('../models/usuario');
 const fs = require('fs');
+// const fs = require('fs'); // file system
+const path = require('path'); // path
 
 const Medico = require('../models/vendedor');
 const Hospital = require('../models/productoGMD');
+
+// const Usuario = require('../models/usuario');
+const Empresa = require('../models/empresa');
+
 
 const borrarImagen = ( path ) => {
     if ( fs.existsSync( path ) ) {
@@ -10,6 +16,7 @@ const borrarImagen = ( path ) => {
         fs.unlinkSync( path );
     }
 }
+
 
 
 const actualizarImagen = async(tipo, id, nombreArchivo) => {
@@ -71,7 +78,176 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
 }
 
 
+// funciones anterio
+function imagenUsuario(id, res, nombreArchivo) {
+
+    Usuario.findById(id, (err, usuarioDB) => {
+
+        if (err) {
+            borrarArchivo(nombreArchivo, 'usuarios');
+
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+
+        if (!usuarioDB) {
+            borrarArchivo(nombreArchivo, 'usuarios');
+
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'Usuario no Existe!'
+                }
+            });
+        }
+
+
+        borrarArchivo(usuarioDB.img, 'usuarios');
+        usuarioDB.img = nombreArchivo;
+
+        usuarioDB.save((error, usuarioGuardado) => {
+
+            res.json({
+                ok: true,
+                usuario: usuarioGuardado,
+                // img: nombreArchivo,
+                msg: 'Archivo subido',
+                nombreArchivo
+
+            });
+
+        });
+
+
+    });
+
+
+
+
+}
+
+function imagenProducto(id, res, nombreArchivo) {
+
+    Producto.findById(id, (err, productoDB) => {
+
+        if (err) {
+            borrarArchivo(nombreArchivo, 'productos');
+
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+
+        if (!productoDB) {
+            borrarArchivo(nombreArchivo, 'productos');
+
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'Productos no Existe!'
+                }
+            });
+        }
+
+        borrarArchivo(productoDB.img, 'productos');
+        productoDB.img = nombreArchivo;
+
+        productoDB.save((error, productoGuardado) => {
+
+            res.json({
+                ok: true,
+                producto: productoGuardado,
+                img: nombreArchivo
+
+            });
+
+        });
+
+
+    });
+
+
+}
+
+function borrarArchivo(nombreImagen, tipo) {
+
+    // eliminamos del  imagen
+    let pathImagen = path.resolve(__dirname, `../../uploads/${tipo}/${nombreImagen}`);
+    console.log(pathImagen);
+
+
+    if (fs.existsSync(pathImagen)) {
+        fs.unlinkSync(pathImagen); // borrar el archivo
+    }
+
+}
+// refactorizar
+/*
+const actulizarImagen = async (tipo, id, nombreArchivo) => {
+
+    const tiposValidos = ['productos', 'usuarios','grupos','marcas','empresas'];
+
+    if ( tiposValidos.includes(tipo) ){
+
+        Usuario.findById(id, (err, usuarioDB) => {
+
+            if (err) {
+                borrarArchivo(nombreArchivo, 'usuarios');
+    
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
+    
+            if (!usuarioDB) {
+                borrarArchivo(nombreArchivo, 'usuarios');
+    
+                return res.status(400).json({
+                    ok: false,
+                    err: {
+                        message: 'Usuario no Existe!'
+                    }
+                });
+            }
+    
+    
+            borrarArchivo(usuarioDB.img, 'usuarios');
+            usuarioDB.img = nombreArchivo;
+    
+            usuarioDB.save((error, usuarioGuardado) => {
+    
+                res.json({
+                    ok: true,
+                    usuario: usuarioGuardado,
+                    // img: nombreArchivo,
+                    msg: 'Archivo subido',
+                    nombreArchivo
+    
+                });
+    
+            });
+    
+    
+        });
+    
+    
+
+
+
+     }
+
+
+}
+
+*/
 
 module.exports = { 
-    actualizarImagen
+    actualizarImagen,
+    imagenUsuario,
+    imagenProducto
+
 }

@@ -13,17 +13,12 @@ const {
     verificaAdmin_Role
 } = require("../middlewares/autenticacion")
 
-const { fileUpload, retornaImagen } = require('../controller/uploads.ctl');
+const { fileUpload } = require('../controller/uploads.ctl');
 
 const ruta = Router();
 
 ruta.use( expressFileUpload() );
 
 ruta.put('/:tipo/:id', verificaToken , fileUpload );
-
-/*
-ruta.get('/:tipo/:foto', retornaImagen );
-*/
-
 
 module.exports = ruta;

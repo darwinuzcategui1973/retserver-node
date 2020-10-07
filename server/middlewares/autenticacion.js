@@ -104,7 +104,7 @@ const verificaToken = (req, res, next) => {
 // ====================
 // Verificar AdminRole
 // =====================
-let verificaAdmin_Role = (req, res, next) => {
+const  verificaAdmin_Role = (req, res, next) => {
 
     let usuario = req.usuario;
 
@@ -127,7 +127,7 @@ let verificaAdmin_Role = (req, res, next) => {
 // ============================
 // Verificar Token para Imagen
 // ============================
-let verificaTokenImg = (req, res, next) => {
+const verificaTokenImg = (req, res, next) => {
 
     let token = req.query.token;
 

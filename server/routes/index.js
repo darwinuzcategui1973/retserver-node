@@ -11,6 +11,7 @@ app.use("/api/usuario", require('./usuario'));
 app.use("/api/empresas", require('./empresa'));
 app.use("/api/todos", require('./busqueda'));
 app.use("/api/upload",require("./uploads"));
+app.use("/api/imagen",require("./imagen"));
 
 /*
 app.use(require("./login"));

@@ -1,6 +1,6 @@
 const { response } = require('express');
 const { v4: uuidv4 } = require('uuid');
-const { actualizarImagen } = require('../helpers/actualizar-imagen');
+const { actualizarImagen,imagenProducto,imagenUsuario } = require('../helpers/actualizar-imagen');
 
 
 const Usuario = require('../models/usuario');
@@ -53,14 +53,14 @@ const fileUpload = ( req, res = response ) => {
     // El nombre del campo de entrada (es decir, "archivo") se utiliza
     //  para recuperar el archivo cargado 
     const archivo = req.files.imagen;
-    console.log(archivo);
+    //console.log(archivo);
 
     // para  extraer la extesion del archivo
-    console.log(archivo.name);
+    //console.log(archivo.name);
     const  nombreCortado = archivo.name.split('.');
     const extesion = nombreCortado[nombreCortado.length - 1];
-    console.log(extesion);
-    console.log(nombreCortado);
+    //console.log(extesion);
+    //console.log(nombreCortado);
 
     // validar las extesiones
     // Extesiones permitidas
@@ -87,10 +87,10 @@ const fileUpload = ( req, res = response ) => {
     // let nombreArchivo1 = `${ id }-${ new Date().getMilliseconds() }.${ extesion }`;
     // Generar el nombre del archivo uuidc4
     const nombreArchivo = `${ uuidv4() }.${ extesion }`;
-    console.log(nombreArchivo);
+    //console.log(nombreArchivo);
     // Path para guardar la imagen
     const path = `./uploads/${ tipo }/${ nombreArchivo }`;
-    console.log(path);
+    //console.log(path);
 
 
     // Use el método mv () para colocar el archivo en algún
@@ -108,7 +108,7 @@ const fileUpload = ( req, res = response ) => {
         }
 
         //aqui imagen cargada
-        console.log(tipo);
+        //console.log(tipo);
         if (tipo === "usuarios") {
             imagenUsuario(id, res, nombreArchivo);
 
@@ -135,7 +135,9 @@ const fileUpload = ( req, res = response ) => {
  //*********************************************/  
     // con la otra manera
      // Mover la imagen
-     archivo.mv( path , (err) => {
+     // Mover la imagen
+     /*
+    archivo.mv( path , (err) => {
         if (err){
             console.log(err)
             return res.status(500).json({
@@ -153,119 +155,41 @@ const fileUpload = ( req, res = response ) => {
             nombreArchivo
         });
     });
-   //******************************************************* */ 
+*/
+   //******************************************************* */
+   archivo.mv(`uploads/${ tipo }/${nombreArchivo}`, (err) => {
+    if (err)
+        return res.status(500).json({
+            ok: false,
+            err
+        });
+
+
+    //aqui imagen cargada
+    console.log(tipo);
+    if (tipo === "usuarios") {
+        imagenUsuario(id, res, nombreArchivo);
+
+    } else {
+
+        imagenProducto(id, res, nombreArchivo);
+
+    }
+
+    /*
+            res.json({
+                ok: true,
+                mensaje: '¡Archivo cargado!  Correctamente en ' + tipo,
+                archivo: nombreArchivo
+            });
+            */
+
+
+});
+
 
 };
 
 
-
-function imagenUsuario(id, res, nombreArchivo) {
-
-    Usuario.findById(id, (err, usuarioDB) => {
-
-        if (err) {
-            borrarArchivo(nombreArchivo, 'usuarios');
-
-            return res.status(500).json({
-                ok: false,
-                err
-            });
-        }
-
-        if (!usuarioDB) {
-            borrarArchivo(nombreArchivo, 'usuarios');
-
-            return res.status(400).json({
-                ok: false,
-                err: {
-                    message: 'Usuario no Existe!'
-                }
-            });
-        }
-
-
-
-
-
-
-        borrarArchivo(usuarioDB.img, 'usuarios');
-        usuarioDB.img = nombreArchivo;
-
-        usuarioDB.save((error, usuarioGuardado) => {
-
-            res.json({
-                ok: true,
-                usuario: usuarioGuardado,
-                img: nombreArchivo
-
-            });
-
-        });
-
-
-    });
-
-
-
-
-}
-
-
-function imagenProducto(id, res, nombreArchivo) {
-
-    Producto.findById(id, (err, productoDB) => {
-
-        if (err) {
-            borrarArchivo(nombreArchivo, 'productos');
-
-            return res.status(500).json({
-                ok: false,
-                err
-            });
-        }
-
-        if (!productoDB) {
-            borrarArchivo(nombreArchivo, 'productos');
-
-            return res.status(400).json({
-                ok: false,
-                err: {
-                    message: 'Productos no Existe!'
-                }
-            });
-        }
-
-        borrarArchivo(productoDB.img, 'productos');
-        productoDB.img = nombreArchivo;
-
-        productoDB.save((error, productoGuardado) => {
-
-            res.json({
-                ok: true,
-                producto: productoGuardado,
-                img: nombreArchivo
-
-            });
-
-        });
-
-
-    });
-
-
-}
-
-function borrarArchivo(nombreImagen, tipo) {
-
-    // eliminamos del  imagen
-    let pathImagen = path.resolve(__dirname, `../../uploads/${tipo}/${nombreImagen}`);
-    console.log(pathImagen);
-
-
-    if (fs.existsSync(pathImagen)) {
-        fs.unlinkSync(pathImagen); // borrar el archivo
-    }
-
-}
 
 module.exports = {fileUpload} ;
