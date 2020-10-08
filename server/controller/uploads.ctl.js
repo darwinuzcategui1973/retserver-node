@@ -1,11 +1,12 @@
 const { response } = require('express');
 const { v4: uuidv4 } = require('uuid');
-const { actualizarImagen,imagenProducto,imagenUsuario } = require('../helpers/actualizar-imagen');
-
-
-const Usuario = require('../models/usuario');
-const Producto = require('../models/productoGMD');
-
+const 
+    {   imagenProducto,
+        imagenUsuario,
+        imagenEmpresa,
+        imagenGrupo,
+        imagenMarca,
+        imagenVendedor } = require('../helpers/actualizar-imagen');
 const fs = require('fs'); // file system
 const path = require('path'); // path
 
@@ -17,179 +18,115 @@ const path = require('path'); // path
 
 //fileUpload
 const fileUpload = ( req, res = response ) => {
-//app.put('/upload/:tipo/:id', function(req, res) {
-
+  
     let tipo = req.params.tipo;
     let id = req.params.id;
 
-    
-    // Validar tipo
-    const tiposValidos = ['productos', 'usuarios','grupos','marcas','empresa'];
 
-   // if (tiposValidos.indexOf(tipo) < 0) {
-    if ( !tiposValidos.includes(tipo) ){
+    if (!req.files) {
+        return res.status(400).
+        json({
+            ok: false,
+            err: {
+                message: 'No fueron subidos los archivos. '
+            }
+        });
+    }
+    // El nombre del campo de entrada (es decir, "archivo") se utiliza para recuperar el archivo cargado 
+    let archivo = req.files.imagen;
+   
+    let nombreCortado = archivo.name.split('.');
+    const extesion = nombreCortado[nombreCortado.length - 1];
+   
+
+    
+    // Validar tipo 
+    let tiposValidos = ['empresas','grupos','marcas','productos', 'usuarios',"vendedores"];
+
+    if (tiposValidos.indexOf(tipo) < 0) {
 
         return res.status(400).json({
             ok: false,
             err: {
-                msg: 'Los Tipos permitidas son ' + tiposValidos.join(', '),
-                tipo_no_permitido:tipo
+                message: 'Los Tipos permitidas son ' + tiposValidos.join(', '),
+                tipo
             }
 
         })
 
     }
-    
-    // Validar que exista un archivo
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).json({
-            ok: false,
-            msg: 'No fueron subidos los archivos. '
-        });
-    }
 
 
-    
-    // El nombre del campo de entrada (es decir, "archivo") se utiliza
-    //  para recuperar el archivo cargado 
-    const archivo = req.files.imagen;
-    //console.log(archivo);
-
-    // para  extraer la extesion del archivo
-    //console.log(archivo.name);
-    const  nombreCortado = archivo.name.split('.');
-    const extesion = nombreCortado[nombreCortado.length - 1];
-    //console.log(extesion);
-    //console.log(nombreCortado);
-
-    // validar las extesiones
     // Extesiones permitidas
-    const extesionesValidas = ['png', 'jpg', 'gif', 'jpeg'];
+    let extesionesValidas = ['png', 'jpg', 'gif', 'jpeg '];
 
- // if (extesionesValidas.indexOf(extesion) < 0) {
-    if (!extesionesValidas.includes(extesion)) {
-
+    if (extesionesValidas.indexOf(extesion) < 0) {
 
         return res.status(400).json({
             ok: false,
             err: {
                 message: 'La extesiones permitidas son ' + extesionesValidas.join(', '),
-                ext_no_permitida: extesion
+                ext:extesion
             }
 
-        });
+        })
 
     }
-   
 
 
-    // cambiar nombre de archivo
-    // let nombreArchivo1 = `${ id }-${ new Date().getMilliseconds() }.${ extesion }`;
-    // Generar el nombre del archivo uuidc4
-    const nombreArchivo = `${ uuidv4() }.${ extesion }`;
-    //console.log(nombreArchivo);
-    // Path para guardar la imagen
-    const path = `./uploads/${ tipo }/${ nombreArchivo }`;
-    //console.log(path);
+    // Generar el nombre del archivo
+    const nombreArchivo = `${ uuidv4() }.${extesion }`;
 
 
-    // Use el método mv () para colocar el archivo en algún
-    // lugar de su servidor 
-    /*
-    archivo.mv( path , (err) => {
-    //archivo.mv( path, (err) => {
-        if (err) {
+    // Use el método mv () para colocar el archivo en algún lugar de su servidor 
+    archivo.mv(`uploads/${ tipo }/${nombreArchivo}`, (err) => {
+      
+        if (err)
             return res.status(500).json({
                 ok: false,
-                msg: 'Error al mover la imagen',
                 err
             });
 
-        }
-
         //aqui imagen cargada
-        //console.log(tipo);
-        if (tipo === "usuarios") {
-            imagenUsuario(id, res, nombreArchivo);
-
-        } else {
-
-            imagenProducto(id, res, nombreArchivo);
-
+        switch( tipo ) {
+            case 'empresas':
+                imagenEmpresa(id, res, nombreArchivo);
+              
+        
+            break;
+            
+            case 'grupos':
+                imagenGrupo(id, res, nombreArchivo);
+              
+            break;
+            
+            case 'marcas':
+                imagenMarca(id, res, nombreArchivo);
+        
+              
+            break;
+        
+            case 'productos':
+                imagenProducto(id, res, nombreArchivo);
+        
+              
+            break;
+        
+            case 'usuarios':
+                imagenUsuario(id, res, nombreArchivo);
+        
+              
+            break;
+        
+            case 'vendedores':
+                imagenVendedor(id, res, nombreArchivo);
+        
+              
+            break;
         }
-
-       
-
+      
 
     });
-
-    
-/*
- 
-  res.json({
-     ok: true,
-     mensaje: '¡Archivo cargado!  Correctamente en ' + tipo,
-     archivo: nombreArchivo
-  });
-    */  
- //*********************************************/  
-    // con la otra manera
-     // Mover la imagen
-     // Mover la imagen
-     /*
-    archivo.mv( path , (err) => {
-        if (err){
-            console.log(err)
-            return res.status(500).json({
-                ok: false,
-                msg: 'Error al mover la imagen'
-            });
-        }
-
-        // Actualizar base de datos
-        actualizarImagen( tipo, id, nombreArchivo );
-
-        res.json({
-            ok: true,
-            msg: 'Archivo subido',
-            nombreArchivo
-        });
-    });
-*/
-   //******************************************************* */
-   archivo.mv(`uploads/${ tipo }/${nombreArchivo}`, (err) => {
-    if (err)
-        return res.status(500).json({
-            ok: false,
-            err
-        });
-
-
-    //aqui imagen cargada
-    console.log(tipo);
-    if (tipo === "usuarios") {
-        imagenUsuario(id, res, nombreArchivo);
-
-    } else {
-
-        imagenProducto(id, res, nombreArchivo);
-
-    }
-
-    /*
-            res.json({
-                ok: true,
-                mensaje: '¡Archivo cargado!  Correctamente en ' + tipo,
-                archivo: nombreArchivo
-            });
-            */
-
-
-});
-
-
 };
-
-
 
 module.exports = {fileUpload} ;

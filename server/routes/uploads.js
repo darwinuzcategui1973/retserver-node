@@ -4,6 +4,10 @@
 */
 const { Router } = require('express');
 
+const { check } = require ( 'express-validator' );
+const { validarCampos } = require('../middlewares/validar-campos');
+
+
 const expressFileUpload = require('express-fileupload');
 
 
@@ -19,6 +23,12 @@ const ruta = Router();
 
 ruta.use( expressFileUpload() );
 
-ruta.put('/:tipo/:id', verificaToken , fileUpload );
+ruta.put('/:tipo/:id',
+[
+    verificaToken,
+    check('id','El usuario id debe de ser válido').isMongoId(),
+    validarCampos
+
+]  , fileUpload );
 
 module.exports = ruta;

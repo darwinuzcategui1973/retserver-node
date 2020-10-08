@@ -1,253 +1,255 @@
-const Usuario = require('../models/usuario');
-const fs = require('fs');
-// const fs = require('fs'); // file system
-const path = require('path'); // path
-
-const Medico = require('../models/vendedor');
-const Hospital = require('../models/productoGMD');
-
-// const Usuario = require('../models/usuario');
-const Empresa = require('../models/empresa');
-
-
-const borrarImagen = ( path ) => {
-    if ( fs.existsSync( path ) ) {
-        // borrar la imagen anterior
-        fs.unlinkSync( path );
-    }
-}
+// importaciones
+const { response } = require('express');
+const fs = require("fs"); // file system
+const path = require("path"); // path
 
 
 
-const actualizarImagen = async(tipo, id, nombreArchivo) => {
+// importaciones de los modelos
+const Usuario = require("../models/usuario");
+const Empresa = require("../models/empresa");
+const Grupo = require("../models/grupo");
+const Marca = require("../models/marca");
+const Producto = require("../models/productoGMD");
+const Vendedor = require("../models/vendedor");
 
-    let pathViejo = '';
-    
-    switch( tipo ) {
-        case 'medicos':
-            const medico = await Medico.findById(id);
-            if ( !medico ) {
-                console.log('No es un médico por id');
-                return false;
-            }
 
-            pathViejo = `./uploads/medicos/${ medico.img }`;
-            borrarImagen( pathViejo );
+const imagenUsuario = async (id, res, nombreArchivo) => {
 
-            medico.img = nombreArchivo;
-            await medico.save();
-            return true;
+  await Usuario.findById(id, (err, usuarioDB) => {
+    if (err) {
+      borrarArchivo(nombreArchivo, "usuarios");
 
-        break;
-        
-        case 'hospitales':
-            const hospital = await Hospital.findById(id);
-            if ( !hospital ) {
-                console.log('No es un hospital por id');
-                return false;
-            }
-
-            pathViejo = `./uploads/hospitales/${ hospital.img }`;
-            borrarImagen( pathViejo );
-
-            hospital.img = nombreArchivo;
-            await hospital.save();
-            return true;
-
-        break;
-        
-        case 'usuarios':
-
-            const usuario = await Usuario.findById(id);
-            if ( !usuario ) {
-                console.log('No es un usuario por id');
-                return false;
-            }
-
-            pathViejo = `./uploads/hospitales/${ usuario.img }`;
-            borrarImagen( pathViejo );
-
-            usuario.img = nombreArchivo;
-            await usuario.save();
-            return true;
-
-        break;
+      return res.status(500).json({
+        ok: false,
+        err,
+      });
     }
 
+    if (!usuarioDB) {
+      borrarArchivo(nombreArchivo, "usuarios");
 
-}
+      return res.status(400).json({
+        ok: false,
+        err: {
+          message: "Usuario no Existe!",
+        },
+      });
+    }
 
+    borrarArchivo(usuarioDB.img, "usuarios");
+    usuarioDB.img = nombreArchivo;
 
-// funciones anterio
-function imagenUsuario(id, res, nombreArchivo) {
-
-    Usuario.findById(id, (err, usuarioDB) => {
-
-        if (err) {
-            borrarArchivo(nombreArchivo, 'usuarios');
-
-            return res.status(500).json({
-                ok: false,
-                err
-            });
-        }
-
-        if (!usuarioDB) {
-            borrarArchivo(nombreArchivo, 'usuarios');
-
-            return res.status(400).json({
-                ok: false,
-                err: {
-                    message: 'Usuario no Existe!'
-                }
-            });
-        }
-
-
-        borrarArchivo(usuarioDB.img, 'usuarios');
-        usuarioDB.img = nombreArchivo;
-
-        usuarioDB.save((error, usuarioGuardado) => {
-
-            res.json({
-                ok: true,
-                usuario: usuarioGuardado,
-                // img: nombreArchivo,
-                msg: 'Archivo subido',
-                nombreArchivo
-
-            });
-
-        });
-
-
+    usuarioDB.save((error, usuarioGuardado) => {
+      res.json({
+        ok: true,
+        msg: "Archivo subido",
+        nombreArchivo,
+      });
     });
+  });
+};
 
+const imagenEmpresa = async (id, res, nombreArchivo) => {
 
-
-
-}
-
-function imagenProducto(id, res, nombreArchivo) {
-
-    Producto.findById(id, (err, productoDB) => {
-
-        if (err) {
-            borrarArchivo(nombreArchivo, 'productos');
-
-            return res.status(500).json({
-                ok: false,
-                err
-            });
-        }
-
-        if (!productoDB) {
-            borrarArchivo(nombreArchivo, 'productos');
-
-            return res.status(400).json({
-                ok: false,
-                err: {
-                    message: 'Productos no Existe!'
-                }
-            });
-        }
-
-        borrarArchivo(productoDB.img, 'productos');
-        productoDB.img = nombreArchivo;
-
-        productoDB.save((error, productoGuardado) => {
-
-            res.json({
-                ok: true,
-                producto: productoGuardado,
-                img: nombreArchivo
-
-            });
-
+    await Empresa.findById(id, (err, empresaDB) => {
+      if (err) {
+        borrarArchivo(nombreArchivo, "empresas");
+  
+        return res.status(500).json({
+          ok: false,
+          err,
         });
-
-
+      }
+  
+      if (!empresaDB) {
+        borrarArchivo(nombreArchivo, "empresas");
+  
+        return res.status(400).json({
+          ok: false,
+          err: {
+            message: "Empresa no Existe!",
+          },
+        });
+      }
+  
+      borrarArchivo(empresaDB.img, "empresas");
+      empresaDB.img = nombreArchivo;
+  
+      empresaDB.save((error, EmpresaGuardado) => {
+        res.json({
+          ok: true,
+          msg: "Archivo subido",
+          nombreArchivo,
+        });
+      });
     });
+ };
+
+const imagenProducto = async (id, res, nombreArchivo) => {
+
+  Producto.findById(id, (err, productoDB) => {
+    if (err) {
+      borrarArchivo(nombreArchivo, "productos");
+
+      return res.status(500).json({
+        ok: false,
+        err,
+      });
+    }
+
+    if (!productoDB) {
+      borrarArchivo(nombreArchivo, "productos");
+
+      return res.status(400).json({
+        ok: false,
+        err: {
+          message: "Productos no Existe!",
+        },
+      });
+    }
+
+    borrarArchivo(productoDB.img, "productos");
+    productoDB.img = nombreArchivo;
+
+    productoDB.save((error, productoGuardado) => {
+      res.json({
+        ok: true,
+        msg: "Archivo subido",
+        nombreArchivo,
+      });
+    });
+  });
+};
+
+const imagenGrupo = async (id, res, nombreArchivo) => {
+
+  Grupo.findById(id, (err, grupoDB) => {
+    if (err) {
+      borrarArchivo(nombreArchivo, "grupos");
+
+      return res.status(500).json({
+        ok: false,
+        err,
+      });
+    }
+
+    if (!grupoDB) {
+      borrarArchivo(nombreArchivo, "grupos");
+
+      return res.status(400).json({
+        ok: false,
+        err: {
+          message: "Grupos no Existe!",
+        },
+      });
+    }
+
+    borrarArchivo(grupoDB.fotourl, "grupos");
+    grupoDB.fotourl = nombreArchivo;
+
+    grupoDB.save((error, grupoGuardado) => {
+      res.json({
+        ok: true,
+        msg: "Archivo subido",
+        nombreArchivo,
+      });
+    });
+  });
+};
+
+const imagenMarca = async (id, res, nombreArchivo) => {
+
+  Marca.findById(id, (err, marcaDB) => {
+    if (err) {
+      borrarArchivo(nombreArchivo, "marcas");
+
+      return res.status(500).json({
+        ok: false,
+        err,
+      });
+    }
+
+    if (!marcaDB) {
+      borrarArchivo(nombreArchivo, "marcas");
+
+      return res.status(400).json({
+        ok: false,
+        err: {
+          message: "Marcas no Existe!",
+        },
+      });
+    }
+
+    borrarArchivo(marcaDB.fotourl, "marcas");
+    marcaDB.fotourl = nombreArchivo;
+
+    marcaDB.save((error, marcaGuardado) => {
+      res.json({
+        ok: true,
+        msg: "Archivo subido",
+        nombreArchivo,
+      });
+    });
+  });
+};
+const imagenVendedor = async (id, res, nombreArchivo) => {
+
+  Vendedor.findById(id, (err, vendedorDB) => {
+    if (err) {
+      borrarArchivo(nombreArchivo, "vendedores");
+
+      return res.status(500).json({
+        ok: false,
+        err,
+      });
+    }
+
+    if (!vendedorDB) {
+      borrarArchivo(nombreArchivo, "vendedores");
+
+      return res.status(400).json({
+        ok: false,
+        err: {
+          message: "Vendedor no Existe!",
+        },
+      });
+    }
+
+    borrarArchivo(vendedorDB.fotourl, "vendedores");
+    vendedorDB.fotourl = nombreArchivo;
+
+    vendedorDB.save((error, vendedorGuardado) => {
+      res.json({
+        ok: true,
+        msg: "Archivo subido",
+        nombreArchivo,
+      });
+    });
+  });
+};
 
 
-}
 
+
+// funcion privada 
 function borrarArchivo(nombreImagen, tipo) {
+  // eliminamos del  imagen
+  let pathImagen = path.resolve(
+    __dirname,
+    `../../uploads/${tipo}/${nombreImagen}`
+  );
 
-    // eliminamos del  imagen
-    let pathImagen = path.resolve(__dirname, `../../uploads/${tipo}/${nombreImagen}`);
-    console.log(pathImagen);
-
-
-    if (fs.existsSync(pathImagen)) {
-        fs.unlinkSync(pathImagen); // borrar el archivo
-    }
-
-}
-// refactorizar
-/*
-const actulizarImagen = async (tipo, id, nombreArchivo) => {
-
-    const tiposValidos = ['productos', 'usuarios','grupos','marcas','empresas'];
-
-    if ( tiposValidos.includes(tipo) ){
-
-        Usuario.findById(id, (err, usuarioDB) => {
-
-            if (err) {
-                borrarArchivo(nombreArchivo, 'usuarios');
-    
-                return res.status(500).json({
-                    ok: false,
-                    err
-                });
-            }
-    
-            if (!usuarioDB) {
-                borrarArchivo(nombreArchivo, 'usuarios');
-    
-                return res.status(400).json({
-                    ok: false,
-                    err: {
-                        message: 'Usuario no Existe!'
-                    }
-                });
-            }
-    
-    
-            borrarArchivo(usuarioDB.img, 'usuarios');
-            usuarioDB.img = nombreArchivo;
-    
-            usuarioDB.save((error, usuarioGuardado) => {
-    
-                res.json({
-                    ok: true,
-                    usuario: usuarioGuardado,
-                    // img: nombreArchivo,
-                    msg: 'Archivo subido',
-                    nombreArchivo
-    
-                });
-    
-            });
-    
-    
-        });
-    
-    
-
-
-
-     }
-
-
+  if (fs.existsSync(pathImagen)) {
+    fs.unlinkSync(pathImagen); // borrar el archivo
+  }
 }
 
-*/
-
-module.exports = { 
-    actualizarImagen,
-    imagenUsuario,
-    imagenProducto
-
-}
+module.exports = {
+  imagenProducto,
+  imagenUsuario,
+  imagenEmpresa,
+  imagenGrupo,
+  imagenMarca,
+  imagenVendedor
+};
