@@ -18,9 +18,13 @@ let vendedorSchema = new Schema({
         type: String,
         required: [true, "El nombre del es Necesario"]
     },
-    idUsuario: {
-        type: String,
-
+    idEmpresa: {
+        type: Schema.Types.ObjectId,
+        ref: 'Empresa'
+    },
+    disponible: {
+        type: Boolean,
+        default: true
     },
     infVendedor: {
         direccion: {

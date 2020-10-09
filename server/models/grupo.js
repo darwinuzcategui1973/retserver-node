@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
 // obtener el esquema
-let Schema = mongoose.Schema; //definir los campos de la colección y las reglas.
+const Schema = mongoose.Schema; //definir los campos de la colección y las reglas.
 
-let estadosValidos = {
+const estadosValidos = {
     values: ['INICIAL', 'MODIFICADO', 'NUEVO'],
     menssage: '{VALUE} no es un Estado válido'
 };
 
-let grupoSchema = new Schema({
+const grupoSchema = new Schema({
     codigoGrupoGmd: {
         type: String,
         // unique: true,
@@ -19,11 +19,15 @@ let grupoSchema = new Schema({
         type: String,
         required: [true, "El nombre del es Necesario"]
     },
-    /*
-    idUsuario: {
-        type: String,
-
-    },*/
+    idEmpresa: {
+        type: Schema.Types.ObjectId,
+        required: [true, "idEmpresa es Necesario"],
+        ref: 'Empresa'
+    },
+    disponible: {
+        type: Boolean,
+        default: true
+    },
     fotourl: {
         type: String,
         required: false
@@ -42,15 +46,7 @@ let grupoSchema = new Schema({
     timestamps: true,
     versionKey: false
 });
-/*
-grupoSchema.methods.toJSON = function() {
-    let user = this;
-    let userObject = user.toObject();
-    delete userObject.password;
-    return userObject;
 
-}
-*/
 grupoSchema.plugin(uniqueValidator, {
     message: '{PATH} debe Ser Unico'
 });

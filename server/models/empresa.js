@@ -2,12 +2,13 @@
 const { Schema, model } = require('mongoose');
 const uniqueValidator = require("mongoose-unique-validator");
 
-// let Schema = mongoose.Schema;
-// let empresaSchema = new Schema({
-
-
 
  //definir los campos de la colección y las reglas.
+
+ const estadosValidos = {
+    values: ['INICIAL', 'MODIFICADO', 'NUEVO'],
+    menssage: '{VALUE} no es un Estado válido'
+};
 
 const EmpresaSchema = Schema({
     codigoEmpresa: {
@@ -22,8 +23,12 @@ const EmpresaSchema = Schema({
     },
     disponible: {
         type: Boolean,
-        required: true,
         default: true
+    },
+    estado: {
+        type: String,
+        default: "INICIAL",
+        enum: estadosValidos
     },
     fotourl: {
         type: String,
@@ -101,7 +106,8 @@ EmpresaSchema.plugin(uniqueValidator, {
 });
 
 EmpresaSchema.method('toJSON', function() {
-    const { __v, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
+    object.empId=_id;
     return object;
 });
 

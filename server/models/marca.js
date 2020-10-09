@@ -23,10 +23,14 @@ let marcaSchema = new Schema({
         required: false
 
     },
-    estado: {
-        type: String,
-        default: "INICIAL",
-        enum: estadosValidos
+    idEmpresa: {
+        type: Schema.Types.ObjectId,
+        required: [true, "idEmpresa es Necesario"],
+        ref: 'Empresa'
+    },
+    disponible: {
+        type: Boolean,
+        default: true
     },
     usuario: {
         type: Schema.Types.ObjectId,

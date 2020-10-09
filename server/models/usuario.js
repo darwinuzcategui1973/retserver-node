@@ -34,6 +34,11 @@ let usuarioSchema = new Schema({
         default: "USER_ROLE",
         enum: rolesValidos
     },
+    disponible: {
+        type: Boolean,
+        required: true,
+        default: true
+    },
     estado: {
         type: Boolean,
         default: true

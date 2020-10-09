@@ -96,10 +96,10 @@ let productoSchema = new Schema({
         ref: 'Vendedor'
 
     },
-    empresa: {
+    idEmpresa: {
         type: Schema.Types.ObjectId,
-        ref: 'Empresa',
-        required: true
+        required: [true, "idEmpresa es Necesario"],
+        ref: 'Empresa'
     },
 }, {
     timestamps: true,
