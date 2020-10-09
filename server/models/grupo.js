@@ -19,10 +19,11 @@ let grupoSchema = new Schema({
         type: String,
         required: [true, "El nombre del es Necesario"]
     },
+    /*
     idUsuario: {
         type: String,
 
-    },
+    },*/
     fotourl: {
         type: String,
         required: false
@@ -52,6 +53,11 @@ grupoSchema.methods.toJSON = function() {
 */
 grupoSchema.plugin(uniqueValidator, {
     message: '{PATH} debe Ser Unico'
+});
+
+grupoSchema.method('toJSON', function() {
+    const { __v, ...object } = this.toObject();
+    return object;
 });
 
 module.exports = mongoose.model("Grupo", grupoSchema);

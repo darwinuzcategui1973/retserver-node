@@ -7,23 +7,19 @@ const Usuario = require("../models/usuario");
 
 const { generarJwt } = require("../helpers/jwt");
 
-
 // controlador de usuarios para separar la logica
 // lista usuarios
 const getUsuarios = async (req, res) => {
-
   const desde = Number(req.query.desde) || 0;
   const limit = Number(req.query.limit) || 5;
 
-  const [usuarios, total ] = await Promise.all([
-    
+  const [usuarios, total] = await Promise.all([
     Usuario.find({ estado: true }, "nombre email role google img")
       .sort("role")
       .skip(desde)
       .limit(limit),
 
-    Usuario.countDocuments({ estado: true })
-
+    Usuario.countDocuments({ estado: true }),
   ]);
 
   res.json({
@@ -208,10 +204,7 @@ const marcarElimUsuario = async (req, res) => {
     estado: false,
   };
 
-  await Usuario.findByIdAndUpdate(
-    id,
-    cambioEstado,
-    { new: true },
+  await Usuario.findByIdAndUpdate(id, cambioEstado,{ new: true },
     (error, usuarioBD) => {
       if (error) {
         return res.status(400).json({
@@ -220,8 +213,7 @@ const marcarElimUsuario = async (req, res) => {
         });
       }
 
-      // voy a seguir en video 15 seccion 9
-
+    
       if (!usuarioBD) {
         return res.status(400).json({
           ok: false,

@@ -25,7 +25,8 @@ const dbConectar = async() => {
         await mongoose.connect(process.env.URLDB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useCreateIndex: true
+            useCreateIndex: true,
+            useFindAndModify:false
         });
 
         console.log("Base de datos ONLINE");
