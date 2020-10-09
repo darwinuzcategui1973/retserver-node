@@ -1,5 +1,6 @@
 //importacion
 const jwt = require("jsonwebtoken");
+const Empresa = require('../models/empresa');
 
 // ====================
 // Verificar Token
@@ -53,7 +54,35 @@ const verificaAdmin_Role = (req, res, next) => {
   
 };
 
+// ====================
+// Verificar Empresa
+// =====================
+
+const verificaEmpresa = async(req, res, next) => {
+  
+  const idEmp = req.header("idEmpresa");
+  
+  try {
+   
+   
+    await Empresa.findById(idEmp)
+    req.idEmpresa = idEmp;
+    next();
+
+  } catch (error) {
+   
+    return res.status(401).json
+    ({
+      ok: false,
+      msg: "Seleccione empresa Valida",
+      error ,
+    });
+  }
+
+};
+
 module.exports = {
   verificaToken,
   verificaAdmin_Role,
+  verificaEmpresa
 };

@@ -1,10 +1,6 @@
 // importaciones
 const { response } = require("express");
 
-const {
-  verificaToken,
-  verificaAdmin_Role,
-} = require("../middlewares/autenticacion");
 
 const Grupo = require("../models/grupo");
 
@@ -13,26 +9,35 @@ const Grupo = require("../models/grupo");
 // ===============================
 const getGrupos = async (req, res = response) => {
   const desde = Number(req.query.desde) || 0;
-  const limit = Number(req.query.limit) || 5;
+  const limit = Number(req.query.limit) || 0;
+  const idEmp = req.idEmpresa;
+  const ordenado = req.header("ordenado") || 'nombre';
+ 
+  const activo = {idEmpresa:idEmp,disponible:true }
+ 
   //Grupo.find({  }, "codigoGrupoGmd nombre")
+  //console.log(ordenado);
 
   const [grupos, total] = await Promise.all([
-    Grupo.find({}).sort("nombre").skip(desde).limit(limit),
+    Grupo.find(activo)
+    .sort(ordenado).skip(desde).limit(limit),
 
-    Grupo.countDocuments({}),
+    Grupo.countDocuments({disponible:true}),
   ]);
 
   res.json({
     ok: true,
-    usuarios: grupos,
-    total,
-  });
+    ordenado,
+    grupos: grupos,
+    total_activo:total
+  })
 };
 
 // ===============================
 // Mostrar un grupo por ID
 // ===============================
 const getUnGrupo = async (req, res = response) => {
+
   // muestra un grupo por su Id
   const id = req.params.id;
 
@@ -65,8 +70,11 @@ const getUnGrupo = async (req, res = response) => {
 // ===============================
 const crearGrupo = async (req, res = response) => {
   const uid = req.usuario.usuId;
+  const idEmp = req.idEmpresa;
+  //console.log(idEmp);
   const grupo = new Grupo({
     usuario: uid,
+    idEmpresa: idEmp,
     ...req.body,
   });
 
@@ -92,9 +100,15 @@ const crearGrupo = async (req, res = response) => {
 // ===============================
 const saveAllGrupo = async (req, res = response) => {
   const uid = req.usuario.usuId;
+  const idEmp = req.idEmpresa;
   const lista = req.body.data;
-
+ 
    // await Grupo.deleteMany().exec(); 
+   try {
+     await Grupo.deleteMany( { idEmpresa: idEmp } );
+ } catch (e) {
+    print (e);
+ }
  
  
   try {
@@ -104,6 +118,7 @@ const saveAllGrupo = async (req, res = response) => {
     
       let grupo = new Grupo({
         usuario: uid,
+    idEmpresa: idEmp,
            ...unItem,
       });
 

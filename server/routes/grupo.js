@@ -21,6 +21,7 @@ const {
 const {
   verificaToken,
   verificaAdmin_Role,
+  verificaEmpresa
 } = require("../middlewares/autenticacion");
 
 const { validarCampos } = require("../middlewares/validar-campos");
@@ -30,7 +31,7 @@ const ruta = Router();
 //*************************************************************
 // petición GET de  lista de grupos
 //*************************************************************
-ruta.get("/", verificaToken, getGrupos);
+ruta.get("/",[verificaToken,verificaEmpresa], getGrupos);
 
 //*************************************************************
 // petición GET de  Una Grupo por ID Grupo
@@ -51,6 +52,7 @@ ruta.post("",
   [
     verificaToken,
     verificaAdmin_Role,
+    verificaEmpresa,
     check("codigoGrupoGmd", "El Codigo de Grupo es Obligatorio").notEmpty(),
     check("nombre", "El Nombre es obligatorio").not().isEmpty(),
     validarCampos,
@@ -65,6 +67,7 @@ ruta.post("/saveall",
   [
     verificaToken,
     verificaAdmin_Role,
+    verificaEmpresa,
     ],
   saveAllGrupo
 );

@@ -140,7 +140,7 @@ const getBuscarEmpresa = async (req, res) => {
 const crearEmpresa = async(req, res = response) => {
 
     const uid = req.usuario.usuId;
-    console.log(uid)
+    // console.log(uid)
     const empresa = new Empresa({ 
         usuarioADMINISTRADOR: uid,
         ...req.body 
