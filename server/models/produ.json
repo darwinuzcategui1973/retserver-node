@@ -1,0 +1,59 @@
+{
+    "data": [
+        {
+            "codigoProductoGmd": "0003",
+            "nombre": "LOTE 0101 teclado",
+            "unidadm": "licenczzzia",
+            "descripcion": "sistemas de administracionaa 3",
+            "precioBss": 10022.12,
+            "precioDolares": 12.5,
+            "usuario": "5f7a59d862b06d3f83e06d09",    
+            "vendedor_proveedor": "5f81db416567de518b88ebdf",
+            "grupo": "5f80ac26f332755241dc4ba4",
+            "marca": "5f81bd621d720a3407b128b5",
+            "oferta": {
+                "enOferta": true,
+                "ofertaValor": 15
+            }
+           
+           
+        },
+        {
+            "codigoProductoGmd": "0000",
+            "nombre": "LOTE 00",
+            "unidadm": "lic",
+            "descripcion": "administracion",
+            "precioBss": 122.12,
+            "precioDolares": 2.5,
+            "usuario": "5f7a59d862b06d3f83e06d09",    
+            "vendedor_proveedor": "5f81db416567de518b88ebdf",
+            "grupo": "5f80ac26f332755241dc4ba4",
+            "marca": "5f81bd621d720a3407b128b5",
+            "oferta": {
+                "enOferta": false,
+                "ofertaValor": 0
+            }
+           
+           
+        },
+        {
+            "codigoProductoGmd": "0004",
+            "nombre": "LOTE 0104 teclado",
+            "unidadm": "und",
+            "descripcion": "pera",
+            "precioBss": 200.12,
+            "precioDolares": 0.75,
+            "usuario": "5f7a59d862b06d3f83e06d09",    
+            "vendedor_proveedor": "5f81db416567de518b88ebdf",
+            "grupo": "5f80ac26f332755241dc4ba4",
+            "marca": "5f81bd621d720a3407b128b5",
+            "oferta": {
+                "enOferta": true,
+                "ofertaValor": 15
+            }
+           
+           
+        }
+    ]
+  }
+  

@@ -10,7 +10,7 @@ const Usuario = require("../models/usuario");
 const Empresa = require("../models/empresa");
 const Grupo = require("../models/grupo");
 const Marca = require("../models/marca");
-const Producto = require("../models/productoGMD");
+const Producto = require("../models/producto");
 const Vendedor = require("../models/vendedor");
 
 

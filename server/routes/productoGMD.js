@@ -7,7 +7,7 @@ const _ = require("underscore");
 
 let app = express();
 
-let Producto = require('../models/productoGMD');
+let Producto = require('../models/producto');
 const listasProductos = require('../cargarDatos/productos/productos.json');
 const { forEach, isEmpty } = require('underscore');
 

@@ -15,6 +15,7 @@ app.use("/api/imagen",require("./imagen"));
 app.use("/api/grupo",require("./grupo"));
 app.use("/api/marca",require("./marca"));
 app.use("/api/vendedor",require("./vendedor"));
+app.use("/api/producto",require("./producto"));
 
 
 /*
