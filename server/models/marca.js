@@ -40,17 +40,13 @@ let marcaSchema = new Schema({
     timestamps: true,
     versionKey: false
 });
-/*
-grupoSchema.methods.toJSON = function() {
-    let user = this;
-    let userObject = user.toObject();
-    delete userObject.password;
-    return userObject;
 
-}
-*/
 marcaSchema.plugin(uniqueValidator, {
     message: '{PATH} debe Ser Unico'
+});
+marcaSchema.method('toJSON', function() {
+    const { __v, ...object } = this.toObject();
+    return object;
 });
 
 module.exports = mongoose.model("Marca", marcaSchema);
