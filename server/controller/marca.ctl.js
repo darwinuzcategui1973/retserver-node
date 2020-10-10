@@ -1,11 +1,6 @@
 // importaciones
 const { response } = require("express");
 
-const {
-  verificaToken,
-  verificaAdmin_Role,
-} = require("../middlewares/autenticacion");
-
 const Marca = require("../models/marca");
 
 // ===============================
@@ -14,19 +9,25 @@ const Marca = require("../models/marca");
 const getMarcas = async (req, res = response) => {
   
   const desde = Number(req.query.desde) || 0;
-  const limit = Number(req.query.limit) || 5;
-  //Marca.find({  }, "codigoMarcaGmd nombre")
-
+  const limit = Number(req.query.limit) || 0;
+ 
+  // nuevo
+  const idEmp = req.idEmpresa;
+  const ordenado = req.header("ordenado") || 'nombre';
+  const todo = Boolean(req.header("todo")) || false ;
+  const activo =(todo) ? {disponible:true } : { idEmpresa:idEmp,disponible:true }
+  
   const [marcas, total] = await Promise.all([
-    Marca.find({}).sort("nombre").skip(desde).limit(limit),
+    Marca.find(activo).sort(ordenado).skip(desde).limit(limit),
 
-    Marca.countDocuments({}),
+    Marca.countDocuments({disponible:true}),
   ]);
 
   res.json({
     ok: true,
-    usuarios: marcas,
-    total,
+    ordenado,
+    marcas,
+    total_activo_en_Coleccion:total
   });
 };
 
@@ -65,9 +66,13 @@ const getUnMarca = async (req, res = response) => {
 //  Crear un Nuevo Marcas
 // ===============================
 const crearMarca = async (req, res = response) => {
+  
   const uid = req.usuario.usuId;
+  const idEmp = req.idEmpresa;
+
   const marca = new Marca({
     usuario: uid,
+    idEmpresa: idEmp,
     ...req.body,
   });
 
@@ -93,9 +98,15 @@ const crearMarca = async (req, res = response) => {
 // ===============================
 const saveAllMarca = async (req, res = response) => {
   const uid = req.usuario.usuId;
+  const idEmp = req.idEmpresa;
   const lista = req.body.data;
 
-   // await Marca.deleteMany().exec(); 
+   // Elimina todos Las marca de esta empresa
+   try {
+    await Marca.deleteMany({ idEmpresa: idEmp });
+  } catch (e) {
+    console.log(e);
+  }
  
  
   try {
@@ -105,6 +116,7 @@ const saveAllMarca = async (req, res = response) => {
     
       let marca = new Marca({
         usuario: uid,
+        idEmpresa: idEmp,
            ...unItem,
       });
 

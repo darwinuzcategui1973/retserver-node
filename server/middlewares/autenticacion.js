@@ -74,7 +74,7 @@ const verificaEmpresa = async(req, res, next) => {
     return res.status(401).json
     ({
       ok: false,
-      msg: "Seleccione empresa Valida",
+      msg: "Seleccionar Una empresa Valida!",
       error ,
     });
   }
