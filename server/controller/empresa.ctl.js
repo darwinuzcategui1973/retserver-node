@@ -254,10 +254,11 @@ const borrarEmpresa = async (req, res = response) => {
         }
 
         // await Empresa.findByIdAndDelete( id );
-        const empresaActualizado = await Empresa.findByIdAndUpdate( id, cambioEstado );
+        const empresaMarcada = await Empresa.findByIdAndUpdate( id, cambioEstado );
 
         res.json({
             ok: true,
+            empresaMarcada,
             msg: 'Empresa borrado'
         }); 
 

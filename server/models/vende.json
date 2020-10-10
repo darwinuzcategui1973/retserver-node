@@ -1,0 +1,37 @@
+{
+  "data": [
+    {
+      "codigoVendedorGmd": "26",
+      "nombre": "SUPERVISOR",
+      "ubicacion": [-75.2952, -255.2525],
+      "infVendedor": {
+        "direccion": "CALLE ESTE DOS CATIA LA MAR",
+        "telefonos": ["0414-9213235", "0402-255.2525"],
+        "comision": 25.25,
+        "descuentoMax": 0.0
+      }
+    },
+    {
+        "codigoVendedorGmd": "01",
+        "nombre": "vendedor01",
+        "ubicacion": [-75.2952, -255.2525],
+        "infVendedor": {
+          "direccion": "CALLE CATIA LA MAR",
+          "telefonos": ["0222-8213238", "0402-255.2525"],
+          "comision": 25.25,
+          "descuentoMax": 10.0
+        }
+      },
+      {
+        "codigoVendedorGmd": "00",
+        "nombre": "gmd",
+        "ubicacion": [-75.2952, -255.2525],
+        "infVendedor": {
+          "direccion": "caracs",
+          "telefonos": ["0414-9213235", "0402-255.2525"],
+          "comision": 25.25,
+          "descuentoMax": 0.0
+        }
+      }
+  ]
+}

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
+const { collection } = require("./empresa");
 
 // obtener el esquema
 const Schema = mongoose.Schema; //definir los campos de la colección y las reglas.
@@ -35,8 +36,8 @@ const vendedorSchema = new Schema(
         required: false,
       },
       telefonos: {
-        type: String,
-        //type: [String]
+        // type: String,
+        type: [String],
       },
       comision: {
         type: Number,
@@ -63,16 +64,15 @@ const vendedorSchema = new Schema(
   {
     timestamps: true,
     versionKey: false,
-  },
-  { collection: "vendedores" }
-);
+  }
+  );
 
 vendedorSchema.plugin(uniqueValidator, {
   message: "{PATH} debe Ser Unico",
 });
-vendedorSchema.method('toJSON', function() {
-    const { __v, ...object } = this.toObject();
-    return object;
+vendedorSchema.method("toJSON", function () {
+  const { __v, ...object } = this.toObject();
+  return object;
 });
 
-module.exports = mongoose.model("Vendedor", vendedorSchema);
+module.exports = mongoose.model("Vendedor", vendedorSchema,"vendedores");
