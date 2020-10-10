@@ -1,6 +1,5 @@
 // importaciones
 const { response } = require("express");
-
 const Producto = require("../models/producto");
 
 // ===============================
@@ -113,12 +112,10 @@ const saveAllProducto = async (req, res = response) => {
   } catch (e) {
     console.log(e);
   }
- console.log(lista);
  
   try {
    
     await lista.forEach(async (unItem) => {
-       
     
       let producto = new Producto({
         usuario: uid,
@@ -137,7 +134,6 @@ const saveAllProducto = async (req, res = response) => {
           error,
         });
       }
-
 
     });
 
@@ -159,9 +155,8 @@ const saveAllProducto = async (req, res = response) => {
     });
 
   }
-  
+ 
 };
-
 // ===============================
 //  Actulizar  Productos
 // ===============================
