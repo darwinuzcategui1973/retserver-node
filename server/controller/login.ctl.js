@@ -26,19 +26,15 @@ const login = async (req, res) => {
     if (!usuarioBD) {
       return res.status(400).json({
         ok: false,
-        err: {
-          msg: "(Usuario) o contraseña incorrectos",
-        },
+       msg: "(Usuario) o contraseña incorrectos",
       });
     }
 
     if (!bcrypt.compareSync(password, usuarioBD.password)) {
       return res.status(400).json({
         ok: false,
-        err: {
-          message: "Usuario o (contraseña) incorrectos",
-        },
-      });
+        msg: "Usuario o (contraseña) incorrectos",
+       });
     }
 
   

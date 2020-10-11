@@ -38,8 +38,8 @@ ruta.get('/',verificaToken, getUsuarios);
 ruta.get('/sintoken/', getUsuariosSinToken);
 ruta.post('/',
     [
-        verificaToken,
-        verificaAdmin_Role,
+       // verificaToken,
+       // verificaAdmin_Role,
         check('nombre',"El Nombre es Obligatorio").notEmpty(),
         check('password',"El Password es obligatorio").not().isEmpty(),
         check('email',"Email debe ser de tipo Email").isEmail(),
